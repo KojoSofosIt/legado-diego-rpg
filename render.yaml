@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: legado-diego-rpg
+    runtime: python
+    plan: free                          # cambia a "starter" cuando quieras custom domain
+    buildCommand: pip install -r requirements-web.txt
+    startCommand: uvicorn api.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0

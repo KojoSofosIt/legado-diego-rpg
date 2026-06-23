@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Legado de Diego — RPG</title>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     GOOGLE ADSENSE — reemplaza los tres valores marcados con YOUR_…
+     1. Crea cuenta en https://adsense.google.com
+     2. Añade tu sitio y espera aprobación (~1-3 días)
+     3. Crea dos unidades de anuncio: "Banner" y "Sidebar"
+     4. Sustituye YOUR_PUBLISHER_ID, YOUR_BANNER_SLOT_ID, YOUR_SIDEBAR_SLOT_ID
+     ═══════════════════════════════════════════════════════════════════════ -->
+<script async
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+  crossorigin="anonymous"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0d1117;
+    --bg2:     #161b22;
+    --border:  #30363d;
+    --text:    #c9d1d9;
+    --dim:     #8b949e;
+    --green:   #56d364;
+    --yellow:  #e3b341;
+    --red:     #ff7b7b;
+    --cyan:    #79c0ff;
+    --magenta: #d2a8ff;
+    --prompt:  #56d364;
+  }
+
+  html, body { height: 100%; background: var(--bg); color: var(--text);
+               font-family: 'Courier New', Courier, monospace; font-size: 14px; }
+
+  #layout { display: flex; flex-direction: column; height: 100vh; }
+
+  /* ── Toolbar ── */
+  #toolbar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 6px 12px; background: var(--bg2); border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  #toolbar .title { color: var(--yellow); font-weight: bold; margin-right: 8px; }
+  #toolbar button {
+    padding: 3px 10px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 4px; cursor: pointer;
+    font-family: inherit; font-size: 12px;
+  }
+  #toolbar button:hover { border-color: var(--cyan); color: var(--cyan); }
+  #toolbar button.danger:hover { border-color: var(--red); color: var(--red); }
+  #toolbar .sep { color: var(--border); }
+
+  /* ── Banner ad (below toolbar) ── */
+  #ad-banner {
+    flex-shrink: 0; background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    min-height: 90px; display: flex; align-items: center; justify-content: center;
+  }
+  #ad-banner ins { width: 100%; }
+
+  /* ── Main area: terminal + sidebar ── */
+  #main-area { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── Terminal output ── */
+  #terminal {
+    flex: 1; overflow-y: auto; padding: 12px 16px;
+    line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+  }
+  .line-echo  { color: var(--prompt); }
+  .line-error { color: var(--red); font-style: italic; }
+
+  /* ANSI colours */
+  .ab { font-weight: bold; }
+  .ad { opacity: 0.55; }
+  .a31 { color: var(--red); }
+  .a32 { color: var(--green); }
+  .a33 { color: var(--yellow); }
+  .a35 { color: var(--magenta); }
+  .a36 { color: var(--cyan); }
+
+  /* ── Sidebar ad (300 × 250) ── */
+  #ad-sidebar {
+    width: 320px; flex-shrink: 0;
+    background: var(--bg2); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px 8px; gap: 16px; overflow-y: auto;
+  }
+  #ad-sidebar ins { display: block; }
+  #ad-sidebar .sidebar-label {
+    color: var(--dim); font-size: 10px; text-align: center;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  /* Hide sidebar on small screens */
+  @media (max-width: 900px) { #ad-sidebar { display: none; } }
+
+  /* ── Input bar ── */
+  #input-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; background: var(--bg2); border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  #input-bar .prompt { color: var(--prompt); font-weight: bold; font-size: 16px; }
+  #cmd { flex: 1; background: transparent; border: none; outline: none;
+         color: var(--text); font-family: inherit; font-size: 14px; caret-color: var(--green); }
+  #in-combat-badge {
+    display: none; padding: 2px 8px; background: var(--red);
+    color: #000; border-radius: 3px; font-size: 11px; font-weight: bold;
+  }
+
+  /* ── Modal ── */
+  #modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
+    align-items: center; justify-content: center; z-index: 10;
+  }
+  #modal-overlay.open { display: flex; }
+  #modal {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; min-width: 320px; max-width: 480px; width: 90%;
+  }
+  #modal h2 { color: var(--yellow); margin-bottom: 12px; font-size: 15px; }
+  #modal .save-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+  }
+  #modal .save-row:last-of-type { border-bottom: none; }
+  #modal .save-label { color: var(--text); font-size: 13px; }
+  #modal .save-meta  { color: var(--dim);  font-size: 12px; }
+  #modal .btn-load {
+    padding: 3px 12px; background: var(--bg); border: 1px solid var(--green);
+    color: var(--green); border-radius: 4px; cursor: pointer; font-family: inherit;
+  }
+  #modal .btn-load:hover { background: var(--green); color: #000; }
+  #modal .empty { color: var(--dim); font-style: italic; padding: 8px 0; }
+  #modal .modal-footer { margin-top: 14px; text-align: right; }
+  #modal .btn-close {
+    padding: 4px 14px; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); border-radius: 4px; cursor: pointer; font-family: inherit;
+  }
+  #modal .btn-close:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── Scrollbar ── */
+  #terminal::-webkit-scrollbar { width: 6px; }
+  #terminal::-webkit-scrollbar-track { background: var(--bg); }
+  #terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  #ad-sidebar::-webkit-scrollbar { width: 4px; }
+  #ad-sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+<div id="layout">
+
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <span class="title">⚔ El Legado de Diego</span>
+    <span class="sep">|</span>
+    <button onclick="quickCmd('mirar')">Mirar</button>
+    <button onclick="quickCmd('estado')">Estado</button>
+    <button onclick="quickCmd('inventario')">Mochila</button>
+    <button onclick="quickCmd('ayuda')">Ayuda</button>
+    <span class="sep">|</span>
+    <button onclick="doSave()">💾 Guardar</button>
+    <button onclick="openLoadModal()">📂 Cargar</button>
+    <span class="sep">|</span>
+    <button class="danger" onclick="confirmNewGame()">🔄 Nueva partida</button>
+  </div>
+
+  <!-- ── Banner ad ─────────────────────────────────────────────────────────
+       Formato: Leaderboard responsive (auto-fill de ancho)
+       Reemplaza YOUR_PUBLISHER_ID y YOUR_BANNER_SLOT_ID
+  ───────────────────────────────────────────────────────────────────────── -->
+  <div id="ad-banner">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+         data-ad-slot="YOUR_BANNER_SLOT_ID"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- Main area -->
+  <div id="main-area">
+
+    <!-- Terminal -->
+    <div id="terminal"></div>
+
+    <!-- ── Sidebar ad ──────────────────────────────────────────────────────
+         Formato: Rectangle 300×250 (el más rentable en desktop)
+         Reemplaza YOUR_PUBLISHER_ID y YOUR_SIDEBAR_SLOT_ID
+    ──────────────────────────────────────────────────────────────────────── -->
+    <div id="ad-sidebar">
+      <div class="sidebar-label">Publicidad</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:300px;height:250px"
+           data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+           data-ad-slot="YOUR_SIDEBAR_SLOT_ID"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <!-- Segundo slot sidebar (300×600 half-page, mayor CPM) -->
+      <div class="sidebar-label" style="margin-top:8px">Publicidad</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:300px;height:600px"
+           data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+           data-ad-slot="YOUR_SIDEBAR_SLOT_ID_2"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+  </div><!-- /main-area -->
+
+  <!-- Input bar -->
+  <div id="input-bar">
+    <span class="prompt">›</span>
+    <span id="in-combat-badge">⚔ COMBATE</span>
+    <input id="cmd" autofocus autocomplete="off" spellcheck="false"
+           placeholder="Escribe un comando y pulsa Enter…">
+  </div>
+
+</div><!-- /layout -->
+
+<!-- Load modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h2>📂 Cargar partida</h2>
+    <div id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+let SID = null;
+let inCombat = false;
+let cmdHistory = [];
+let histPos = -1;
+
+// ── ANSI → HTML ──────────────────────────────────────────────────────────────
+
+function ansiToHtml(raw) {
+  const esc = raw
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const parts = esc.split(/\x1b\[([0-9;]*)m/);
+  let html = '';
+  let open = [];
+
+  for (let i = 0; i < parts.length; i++) {
+    if (i % 2 === 0) {
+      html += parts[i];
+    } else {
+      const codes = parts[i] === '' ? ['0'] : parts[i].split(';');
+      for (const c of codes) {
+        if (c === '0') {
+          html += '</span>'.repeat(open.length);
+          open = [];
+        } else {
+          const cls = c === '1' ? 'ab' : c === '2' ? 'ad' : `a${c}`;
+          html += `<span class="${cls}">`;
+          open.push(cls);
+        }
+      }
+    }
+  }
+  html += '</span>'.repeat(open.length);
+  return html;
+}
+
+// ── Terminal output ───────────────────────────────────────────────────────────
+
+function append(text, cls) {
+  const t = document.getElementById('terminal');
+  const div = document.createElement('div');
+  if (cls) {
+    div.className = cls;
+    div.textContent = text;
+  } else {
+    div.innerHTML = ansiToHtml(text);
+  }
+  t.appendChild(div);
+  t.scrollTop = t.scrollHeight;
+}
+
+// ── API helpers ───────────────────────────────────────────────────────────────
+
+async function post(url, body) {
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({ detail: r.statusText }));
+    throw new Error(err.detail || r.statusText);
+  }
+  return r.json();
+}
+
+// ── Game actions ──────────────────────────────────────────────────────────────
+
+async function newGame() {
+  document.getElementById('terminal').innerHTML = '';
+  inCombat = false;
+  updateCombatBadge();
+  try {
+    const d = await post('/api/new', {});
+    SID = d.session_id;
+    append(d.output);
+  } catch (e) {
+    append('Error al iniciar: ' + e.message, 'line-error');
+  }
+}
+
+async function sendCommand(raw) {
+  if (!SID) return;
+  append('› ' + raw, 'line-echo');
+  try {
+    const d = await post('/api/command', { session_id: SID, command: raw });
+    if (d.output) append(d.output);
+    inCombat = d.in_combat;
+    updateCombatBadge();
+    if (d.game_over) {
+      append('\n[ FIN DE PARTIDA ]', 'line-error');
+    }
+  } catch (e) {
+    if (e.message.includes('expirada') || e.message.includes('encontrada')) {
+      append('Sesión perdida. Iniciando nueva partida…', 'line-error');
+      await newGame();
+    } else {
+      append('Error: ' + e.message, 'line-error');
+    }
+  }
+}
+
+async function doSave(slot) {
+  if (!SID) return;
+  slot = slot || 1;
+  try {
+    const d = await post('/api/save', { session_id: SID, slot });
+    append('  ' + d.message + '\n');
+  } catch (e) {
+    append('  Error al guardar: ' + e.message + '\n', 'line-error');
+  }
+}
+
+async function loadSlot(slot) {
+  closeModal();
+  if (!SID) return;
+  try {
+    const d = await post('/api/load', { session_id: SID, slot });
+    inCombat = false;
+    updateCombatBadge();
+    append(d.output);
+  } catch (e) {
+    append('  Error al cargar: ' + e.message + '\n', 'line-error');
+  }
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────────────
+
+function quickCmd(cmd) {
+  document.getElementById('cmd').value = cmd;
+  document.getElementById('cmd').focus();
+  handleSubmit();
+}
+
+function confirmNewGame() {
+  if (confirm('¿Iniciar una nueva partida? (perderás la sesión actual)')) newGame();
+}
+
+function updateCombatBadge() {
+  document.getElementById('in-combat-badge').style.display = inCombat ? 'inline' : 'none';
+}
+
+// ── Save/Load modal ───────────────────────────────────────────────────────────
+
+async function openLoadModal() {
+  if (!SID) return;
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '<div class="empty">Cargando…</div>';
+  document.getElementById('modal-overlay').classList.add('open');
+  try {
+    const d = await fetch(`/api/saves/${SID}`).then(r => r.json());
+    if (!d.saves || d.saves.length === 0) {
+      body.innerHTML = '<div class="empty">No hay partidas guardadas.</div>';
+      return;
+    }
+    body.innerHTML = d.saves.map(s => `
+      <div class="save-row">
+        <div>
+          <div class="save-label">Slot ${s.slot} — ${s.position}</div>
+          <div class="save-meta">HP ${s.hp}/${s.max_hp} &nbsp;·&nbsp; ${s.saved_at}</div>
+        </div>
+        <button class="btn-load" onclick="loadSlot(${s.slot})">Cargar</button>
+      </div>
+    `).join('');
+  } catch (e) {
+    body.innerHTML = `<div class="empty">Error: ${e.message}</div>`;
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ── Input handling ────────────────────────────────────────────────────────────
+
+function handleSubmit() {
+  const inp = document.getElementById('cmd');
+  const raw = inp.value.trim();
+  if (!raw) return;
+  inp.value = '';
+  if (cmdHistory[0] !== raw) cmdHistory.unshift(raw);
+  if (cmdHistory.length > 50) cmdHistory.pop();
+  histPos = -1;
+  sendCommand(raw);
+}
+
+document.getElementById('cmd').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); return; }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    histPos = Math.min(histPos + 1, cmdHistory.length - 1);
+    e.target.value = cmdHistory[histPos] || '';
+    return;
+  }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    histPos = Math.max(histPos - 1, -1);
+    e.target.value = histPos < 0 ? '' : cmdHistory[histPos];
+  }
+});
+
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ── Start ─────────────────────────────────────────────────────────────────────
+newGame();
+</script>
+</body>
+</html>
