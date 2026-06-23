@@ -11,6 +11,7 @@ from src.player import Player
 from src.world import World
 from src.ui import UI
 from src.combat import CombatEngine
+from src.challenge import ChallengeEngine
 from src.commands import CommandParser
 
 
@@ -21,7 +22,8 @@ def main() -> None:
     player = Player(start_room="altar_diego")
     world = World()
     combat = CombatEngine(player, ui)
-    parser = CommandParser(player, world, ui, combat)
+    challenge = ChallengeEngine(player, ui)
+    parser = CommandParser(player, world, ui, combat, challenge)
 
     # Describe starting room
     room = world.get_room(player.position)

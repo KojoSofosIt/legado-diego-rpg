@@ -13,11 +13,12 @@ DIRECTION_MAP = {
 
 
 class CommandParser:
-    def __init__(self, player, world, ui, combat_engine) -> None:
+    def __init__(self, player, world, ui, combat_engine, challenge_engine=None) -> None:
         self.player = player
         self.world = world
         self.ui = ui
         self.combat = combat_engine
+        self.challenge = challenge_engine
 
     def execute(self, raw: str) -> None:
         raw = raw.strip()
@@ -89,6 +90,32 @@ class CommandParser:
                 else:
                     print(f"  {_c(_RD)}{gate['msg']}{_c(_R)}")
                     return
+            # Requires completing a narrative challenge
+            if "requires_challenge" in gate:
+                cid = gate["requires_challenge"]
+                done_flag = f"challenge_{cid}_done"
+                if done_flag in self.player.flags:
+                    self.player.position = gate["destination"]
+                    self._look()
+                    return
+                if self.challenge is None:
+                    print(f"  {_c(_RD)}{gate.get('msg', 'Bloqueado.')}{_c(_R)}")
+                    return
+                self.challenge.run(cid)
+                if done_flag in self.player.flags:
+                    if cid == "nivel9_trono":
+                        flags = self.player.flags
+                        if "eleccion_final_a" in flags:
+                            dest = "final_a"
+                        elif "eleccion_final_c" in flags:
+                            dest = "final_c"
+                        else:
+                            dest = "final_b"
+                    else:
+                        dest = gate["destination"]
+                    self.player.position = dest
+                    self._look()
+                return
 
         normal = room.get("exits", {})
         if direction in normal:

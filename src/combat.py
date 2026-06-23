@@ -103,6 +103,9 @@ class CombatEngine:
             return "attack", None
         if raw in ("h", "huir", "flee", "escape"):
             return "flee", None
+        # Strip "usar " / "use " prefix for web input
+        if raw.startswith(("usar ", "use ")):
+            raw = raw.split(" ", 1)[1]
         try:
             idx = int(raw) - 1
             if 0 <= idx < len(usable):
@@ -185,6 +188,13 @@ class CombatEngine:
             elif action == "item" and item_id:
                 dealt = self._use_item(item_id, creature_id)
                 c_hp -= dealt
+                # Healing items: instant use, no creature counterattack
+                if ITEMS.get(item_id, {}).get("type") == "healing":
+                    done = c_hp <= 0 or self.player.hp <= 0
+                    if not done:
+                        self.ui.combat_status(self.player, template, c_hp)
+                        self._print_options(self._usable_items())
+                    return buf.getvalue(), c_hp, done, done and c_hp <= 0
 
             elif action == "flee":
                 if random.random() < 0.55:
