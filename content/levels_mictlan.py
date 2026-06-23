@@ -406,7 +406,7 @@ ROOMS_MICTLAN: dict[str, dict] = {
             "Las ilusiones del Mictlán viven aquí. "
             "Este es el nivel que Diego nunca superó solo."
         ),
-        "exits": {"sur": "nivel7_corredor"},
+        "exits": {"sur": "nivel7_salida"},
         "locked_exits": {
             "norte": {
                 "destination": "nivel8_cruce",
@@ -446,12 +446,14 @@ ROOMS_MICTLAN: dict[str, dict] = {
 
     # ── NIVEL 9 — Antesala (placeholder) ─────────────────────────────────────
     "nivel9_entrada": {
-        "name": "Chicnauhmictlan — Antesala del Trono",
+        "name": "Chicnauhmictlan — La Escalera Final",
         "description": (
-            "El noveno nivel. El último. "
-            "El trono de cráneos de Mictlantecuhtli se alza al fondo del salón. "
-            "Xochitl aprieta tu mano. Diego espera — su forma apenas visible "
-            "entre las sombras del techo infinito. "
+            "El noveno nivel. El último.\n\n"
+            "Una escalera de piedra desciende frente a ti. Cada peldaño lleva grabado\n"
+            "un símbolo — algunos los reconoces: el que vio Citlali en su techo\n"
+            "cuando te despidió, el que estaba tallado en el templo donde murió Xochitl.\n\n"
+            "Al fondo, una luz fría que no se acerca aunque sigas bajando.\n"
+            "Xochitl camina junto a ti. No dice nada todavía.\n\n"
             "Lo que hagas aquí es el legado."
         ),
         "exits": {"sur": "nivel8_cruce"},
@@ -2652,68 +2654,937 @@ CHALLENGES_MICTLAN: dict[str, dict] = {
 
     # ── Nivel 9 — Trono de Mictlantecuhtli (placeholder mínimo) ──────────────
     "nivel9_trono": {
-        "name": "Chicnauhmictlan — El Trono",
+        "name": "Chicnauhmictlan — Ante Mictlantecuhtli",
         "entry_text": (
-            "Mictlantecuhtli. El señor de los muertos. Sentado en el trono de cráneos.\n"
-            "No te ataca. No habla primero.\n"
-            "Solo espera — con la paciencia de quien ha tenido el tiempo eterno para practicarla.\n\n"
-            "XOCHITL: \"Aquí estamos. Ahora habla.\""
+            "La escalera baja. Es de piedra, lisa, gastada por algo que no fueron pies.\n"
+            "Cada peldaño tiene grabado un símbolo. No los reconoces todos, pero algunos sí:\n"
+            "el que vio Citlali en su techo cuando te despidió.\n"
+            "El que estaba en la pared del templo donde murió Xochitl.\n\n"
+            "NARRADOR: Bajas y bajas. La luz del fondo no se acerca, como si la escalera\n"
+            "fuera infinita. Pero las cuentas que llevas — las heridas, las cicatrices,\n"
+            "las palabras dichas, las palabras tragadas — sí se hacen más pesadas\n"
+            "con cada peldaño.\n\n"
+            "XOCHITL (caminando junto a ti, tan presente como nunca):\n"
+            "\"Vamos.\""
         ),
-        "start_phase": "trono",
+        "start_phase": "escalera",
         "phases": {
-            "trono": {
+
+            # ── PARTE 1 — Escalera y llegada al salón ───────────────────────
+            "escalera": {
                 "text": (
-                    "Mictlantecuhtli:\n"
-                    "\"Has llegado hasta aquí. Diego llegó al séptimo nivel. "
-                    "Tú llegaste al noveno. Eso merece consideración.\"\n\n"
-                    "\"Habla.\"\n\n"
-                    "¿Qué le pides?"
+                    "La escalera no termina donde debería. Sigues bajando.\n"
+                    "Xochitl a tu lado. Ni delante ni atrás — junto a ti.\n\n"
+                    "¿Qué le dices?"
                 ),
                 "options": [
                     {
-                        "label": "[A] \"Liberar a Diego. Él cumplió lo que debía.\"",
+                        "label": "[1] \"¿Tienes miedo?\"",
                         "response_text": (
-                            "MICTLANTECUHTLI: \"Diego no cumplió. Se quedó. "
-                            "Pero tú llegaste en su lugar. Eso tiene peso.\"\n\n"
-                            "Silencio largo.\n\n"
-                            "\"Un alma sale. Una entra. Eso es el balance.\"\n"
-                            "Sus ojos te miran.\n"
-                            "\"¿Estás dispuesto?\"\n\n"
-                            "JUGADOR: \"Sí.\"\n\n"
-                            "El trono brilla. El final comienza."
+                            "XOCHITL:\n"
+                            "\"Sí. Y eso me sorprende. Llevo cuatrocientos años muerta.\n"
+                            "No tendría que tener miedo de nada. Pero estoy temblando.\n"
+                            "Mira — bueno, no me veas, ya sabes cómo flotamos los espíritus.\n"
+                            "Pero si me pudieras tocar la mano, la sentirías temblar.\"\n\n"
+                            "Sigues bajando. La luz del fondo crece."
                         ),
-                        "sets_flag": "eleccion_final_a",
+                        "next_phase": "salon",
+                    },
+                    {
+                        "label": "[2] \"¿Estás lista para volver a verlo?\"",
+                        "response_text": (
+                            "XOCHITL (pausa):\n"
+                            "\"No. No estoy lista. Pero llevo cincuenta años no estando lista.\n"
+                            "Si espero a estarlo, me quedo sin tiempo otra vez.\"\n\n"
+                            "Sigues bajando. La luz crece despacio."
+                        ),
+                        "next_phase": "salon",
+                    },
+                    {
+                        "label": "[3] [Silencio] Caminar sin hablar",
+                        "response_text": (
+                            "XOCHITL (después de un momento):\n"
+                            "\"...\"\n"
+                            "\"Bueno. Yo también. Hay momentos en los que las palabras estorban.\"\n\n"
+                            "Bajas en silencio. La luz del fondo finalmente se acerca."
+                        ),
+                        "nah_delta": 1,
+                        "next_phase": "salon",
+                    },
+                ],
+            },
+
+            # ── Llegada al salón ─────────────────────────────────────────────
+            "salon": {
+                "text": (
+                    "NARRADOR: La escalera termina.\n\n"
+                    "Sales a un salón inmenso. No tiene techo visible — donde debería estar\n"
+                    "el techo hay solo oscuridad pura, sin estrellas, como si alguien hubiera\n"
+                    "tachado el cielo. El piso es de obsidiana pulida — tan pulida que refleja\n"
+                    "todo lo que pasa por encima como un espejo negro.\n\n"
+                    "Columnas de hueso humano se levantan en hileras a tu izquierda y a tu derecha.\n"
+                    "Cientos. Miles. Cada una hecha de huesos perfectamente apilados,\n"
+                    "sin pegamento, sin amarres. Solo equilibrio antiguo.\n\n"
+                    "Al fondo, un trono de cráneos. Y sobre el trono, sentado: Él.\n\n"
+                    "NARRADOR: Es alto. Más alto de lo que un cuerpo puede ser.\n"
+                    "Es un esqueleto, pero no uno cualquiera. La calavera está coronada\n"
+                    "con cráneos más pequeños formando una corona apilada.\n"
+                    "Sus cuencas arden con una luz fría, como dos luciérnagas en cavernas.\n"
+                    "En su mano izquierda: un puñado de polvo blanco que deja caer y vuelve\n"
+                    "a recoger, como un hombre aburrido jugando con arena.\n\n"
+                    "XOCHITL (muy quieta): \"Ese. Ese es.\"\n\n"
+                    "¿Cómo llegas ante él?"
+                ),
+                "options": [
+                    {
+                        "label": "[ESP] Avanzar directo — sin detenerte",
+                        "response_text": (
+                            "Caminas sin detenerte. Cien pasos. Mil.\n"
+                            "La distancia es elástica — el piso de obsidiana refleja tu silueta\n"
+                            "deformándola: a veces te ves como tú, a veces como Diego.\n\n"
+                            "Llegas al pie del trono.\n"
+                            "Las luces en sus cuencas se han girado, despacio, hacia ti.\n\n"
+                            "MICTLANTECUHTLI (voz que es muchas voces a la vez, todas viejas):\n"
+                            "\"Vaya. Otro. ¿Cuántos de ustedes tienen que venir\n"
+                            "antes de entender? Los vivos no pertenecen aquí.\n"
+                            "Y sin embargo, vienen. Y vienen. Y vienen.\""
+                        ),
+                        "esp_delta": 1,
+                        "next_phase": "escaneo",
+                    },
+                    {
+                        "label": "[NAH] Detenerte a la mitad del salón — observar primero",
+                        "response_text": (
+                            "Te detienes. Observas el salón entero antes de avanzar.\n"
+                            "Cuentas las columnas. Notas el patrón de los huesos.\n"
+                            "El piso que te refleja con caras que no son del todo tuyas.\n\n"
+                            "Cuando llegas ante él, has tomado el tiempo de leerlo.\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Vaya. Otro. Pero este se detuvo a la mitad.\"\n"
+                            "Una pausa.\n"
+                            "\"El de dos sangres también se detuvo. A la misma distancia.\n"
+                            "Hay algo en ese peldaño que detiene a los que piensan.\""
+                        ),
+                        "nah_delta": 1,
+                        "next_phase": "escaneo",
+                    },
+                ],
+            },
+
+            # ── PARTE 2 — El escaneo ─────────────────────────────────────────
+            "escaneo": {
+                "text": (
+                    "El polvo blanco se queda quieto en la mano de Mictlantecuhtli.\n"
+                    "Sube, toma la forma de tu cara. Te estudia.\n\n"
+                    "MICTLANTECUHTLI (despacio, como quien lee):\n"
+                    "\"Llegaste con la espada del de dos sangres. Tlachicotl.\n"
+                    "La hoja huele a cosas que ya ha cortado. Y a cosas que aún va a cortar.\"\n\n"
+                    "\"Hueles a Citlali. La curandera del pueblo de arriba.\n"
+                    "La que le enseñó al de dos sangres a respetarme.\n"
+                    "Su olor a copal te sigue. Bien.\"\n\n"
+                    "\"Te leí. Me llevó tiempo porque traes equipaje. Mucho equipaje.\"\n\n"
+                    "¿Qué haces mientras te lee?"
+                ),
+                "options": [
+                    {
+                        "label": "[DEFAULT] Escuchar sin hablar — dejar que termine",
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"Quieto. El de dos sangres también se quedó quieto.\n"
+                            "Ustedes aprenden de él o aprenden solos.\n"
+                            "Cualquiera de las dos cosas funciona conmigo.\"\n\n"
+                            "\"Ahora hablemos. ¿A qué viniste?\""
+                        ),
+                        "next_phase": "declaracion",
+                    },
+                    {
+                        "label": "[YAOTL] Yaotl da un paso al frente (requiere aliado de Nivel 6)",
+                        "requires_flag_any": ["yaotl_aliado"],
+                        "response_text": (
+                            "Yaotl, a tu lado, se pone junto a ti.\n\n"
+                            "MICTLANTECUHTLI (las luces en sus cuencas cambian):\n"
+                            "\"Yaotl. Mi guerrero más viejo. Está aquí. Contigo.\n"
+                            "No frente a mí, sino a tu lado.\"\n\n"
+                            "MICTLANTECUHTLI: \"Yaotl. Te pregunté hace cuatro siglos\n"
+                            "por qué disparabas. No supiste responder.\n"
+                            "Vienes hoy con un caminante. ¿Tienes la respuesta?\"\n\n"
+                            "YAOTL (firme):\n"
+                            "\"Disparé porque me dijeron que la guerra era eterna.\n"
+                            "Hoy sé que no lo era. Hoy descansaré, si me dejas.\n"
+                            "Pero antes, acompaño a este. Le debo un canto.\"\n\n"
+                            "MICTLANTECUHTLI (pausa larga):\n"
+                            "\"Yaotl no se mueve por nadie. Que se mueva por ti\n"
+                            "dice más de ti que toda tu dualidad junta.\"\n\n"
+                            "\"Hablemos. ¿A qué viniste?\""
+                        ),
+                        "sets_flag": "nivel9_yaotl_testimonio",
+                        "nah_delta": 1,
+                        "next_phase": "declaracion",
+                    },
+                    {
+                        "label": "[ITZCUINTLI COMBATE] \"Ya hablé con Itzcuintli.\" (requiere combate ganado)",
+                        "requires_flag_any": ["itzcuintli_herido"],
+                        "response_text": (
+                            "MICTLANTECUHTLI (las luces se intensifican un momento):\n"
+                            "\"Heriste a Itzcuintli.\"\n\n"
+                            "Pausa larga, fría.\n\n"
+                            "\"Itzcuintli es viejo. Más viejo que yo, en algunos sentidos.\n"
+                            "Lo he visto pelear con cientos. Pocos lo tocaron. Tú lo tocaste.\"\n\n"
+                            "\"No sé si admirarte o tenerte rabia.\n"
+                            "Probablemente las dos cosas.\n"
+                            "Pero estás parado frente a mí con la herida de su zarpa en el hombro\n"
+                            "y eso te hace serio. Vamos a hablar como serios.\"\n\n"
+                            "\"¿A qué viniste?\""
+                        ),
+                        "esp_delta": 1,
+                        "sets_flag": "nivel9_guerrero_probado",
+                        "next_phase": "declaracion",
+                    },
+                    {
+                        "label": "[ITZCUINTLI DIPLOMACIA] \"Itzcuintli me bendijo.\" (requiere diplomacia)",
+                        "requires_flag_any": ["itzcuintli_bendicion", "chantico_en_memoria"],
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"Itzcuintli te bendijo. Eso le pasa... nunca.\n"
+                            "Lo último fue hace cuatrocientos años, con el de dos sangres.\n"
+                            "Y solo a medias.\"\n\n"
+                            "\"Y no solo eso: despertaste a Chantico. Mi gata.\n"
+                            "La hermana menor de Itzcuintli.\n"
+                            "Llevaba siglos durmiendo. Yo la creía perdida.\n"
+                            "Tú la levantaste.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Caminante, me obligas a recalibrar quién eres.\"\n\n"
+                            "\"¿A qué viniste?\""
+                        ),
+                        "nah_delta": 1,
+                        "sets_flag": "nivel9_bendicion_reconocida",
+                        "next_phase": "declaracion",
+                    },
+                ],
+            },
+
+            # ── PARTE 3 — Las tres declaraciones ────────────────────────────
+            "declaracion": {
+                "text": (
+                    "MICTLANTECUHTLI:\n"
+                    "\"Ahora hablemos. ¿A qué viniste?\"\n\n"
+                    "El polvo blanco vuelve a caer en su mano."
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Vengo por las almas tomadas antes de tiempo.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"Almas. ¿Cuáles, caminante? Aquí tengo millones.\n"
+                            "Llevo aquí desde antes de que tu lengua tuviera nombre.\n"
+                            "Niños recién nacidos. Viejos que esperaron mucho.\n"
+                            "Madres que no terminaron de criar.\"\n\n"
+                            "\"¿Cuáles 'antes de tiempo' me reclamas?\"\n\n"
+                            "JUGADOR: \"Las que se llevaron las grietas. Las que cruzaron sin morir realmente.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Las grietas. Sí. Esas almas las cuento. Las llevo apuntadas.\n"
+                            "Y sí, son injustas. Lo sé.\n"
+                            "Pero las grietas no las hice yo. Para resolverlo tendrás que entender\n"
+                            "por qué se abren. Y eso, mi querido caminante, es lo que el acertijo final\n"
+                            "preguntará. Si llegas. Si pasas todo lo que falta.\"\n\n"
+                            "\"Pero antes de seguir con eso, hablemos de él. De Diego.\n"
+                            "Porque tarde o temprano vas a preguntar.\"\n"
+                            "\"Pregunta.\""
+                        ),
+                        "sets_flag": "declaracion_almas",
+                        "next_phase": "preguntas_diego",
+                    },
+                    {
+                        "label": "[2] \"Diego Xólotl de Guzmán. ¿Dónde está?\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI (silencio incómodo):\n"
+                            "\"Ah. Diego. Entonces eres TÚ. El que venía después.\n"
+                            "Me preguntaba cuándo aparecerías.\"\n\n"
+                            "\"He estado contando. Cincuenta años. Todos los días.\n"
+                            "Sabía que vendría alguien. Lo que no sabía era qué clase.\n"
+                            "Y veo que viniste con armas, con espíritu, con preguntas.\"\n\n"
+                            "\"Está aquí. Por supuesto. Está aquí desde que cerró las grietas\n"
+                            "anteriores y se quedó como tapa para que no se volvieran a abrir\n"
+                            "tan pronto. Lo que no funcionó: se abrieron igual.\n"
+                            "Diego está aquí, abajo. Sentado donde nadie lo molesta. Esperando.\"\n\n"
+                            "\"Esperándote, supongo. Aunque él no lo dijo así.\n"
+                            "Él dijo: 'esperando que pase el tiempo'. Pero el tiempo aquí no pasa.\n"
+                            "Así que algo sí esperaba. Y resultaste ser tú.\"\n\n"
+                            "\"Pregunta.\""
+                        ),
+                        "sets_flag": "declaracion_diego",
+                        "next_phase": "preguntas_diego",
+                    },
+                    {
+                        "label": "[3] \"Las puertas. Necesito cerrarlas.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI (el polvo blanco se forma en una columna que no cae):\n"
+                            "\"Las puertas. Hablemos de las puertas, entonces.\n"
+                            "¿Sabes cómo se hicieron, caminante? No las hice yo.\n"
+                            "Las hicimos entre tres: yo, tu lado del mundo,\n"
+                            "y el equilibrio mismo, que no es un dios pero a veces hace de dios.\"\n\n"
+                            "\"Las puertas no son una protección. Son una limitación.\n"
+                            "Una limitación impuesta por miedo.\n"
+                            "Miedo de los vivos a los muertos. Miedo de los muertos a los vivos.\n"
+                            "Miedo de los dos lados a mezclarse demasiado.\"\n\n"
+                            "\"Pero antes de seguir con eso, hablemos de Diego.\n"
+                            "Porque tarde o temprano vas a preguntar. Pregunta.\""
+                        ),
+                        "sets_flag": "declaracion_puertas",
+                        "next_phase": "preguntas_diego",
+                    },
+                ],
+            },
+
+            # ── PARTE 4 — Las tres preguntas sobre Diego ─────────────────────
+            "preguntas_diego": {
+                "text": (
+                    "MICTLANTECUHTLI aguarda. El polvo blanco juega entre sus dedos.\n\n"
+                    "¿Qué preguntas sobre Diego?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"¿Qué le hiciste?\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"¿Qué le hice?\"\n"
+                            "\"Nada. Él tomó una decisión. La más estúpida y valiente\n"
+                            "que he visto en mil años.\"\n\n"
+                            "\"Diego entró aquí hace cincuenta años buscando el alma de una niña.\n"
+                            "Ana. Tenía siete años. Murió de fiebre.\n"
+                            "Un tzitzimitl la trajo sin permiso. Diego vino a recuperarla.\"\n\n"
+                            "\"Yo le propuse el acertijo. Él lo resolvió.\n"
+                            "Eso lo cuentas en los pueblos. Lo que no cuentan:\n"
+                            "después del acertijo, Diego — en lugar de irse con Ana —\n"
+                            "se quedó parado donde tú estás ahora. Y me dijo:\n"
+                            "'Las grietas se van a abrir otra vez en cincuenta años.\n"
+                            "Lo sé. Tú lo sabes. Necesito que aguanten más. Me quedo de tapón.'\"\n\n"
+                            "\"Yo le respondí: 'Si te quedas de tapón, no vuelves a tu pueblo.\n"
+                            "No envejeces. No mueres como los hombres deben morir.\n"
+                            "Te quedas aquí — vivo en la frontera — hasta que las grietas\n"
+                            "se abran de todos modos. Cosa que pasará.'\"\n\n"
+                            "\"Diego dijo: 'Lo sé. Lo acepto. En cincuenta años, alguien va a venir.\n"
+                            "Y ese alguien quizá sí cure el agujero.'\"\n\n"
+                            "MICTLANTECUHTLI (despacio):\n"
+                            "\"Tú eres ese alguien.\""
+                        ),
+                        "sets_flag": "pregunta_que_le_hiciste",
+                        "next_phase": "encuentro_diego",
+                    },
+                    {
+                        "label": "[2] \"¿Está vivo?\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI (pausa):\n"
+                            "\"Esa es la pregunta correcta. Y la respuesta:\n"
+                            "depende de cómo definas 'vivo'.\"\n\n"
+                            "\"Su corazón late. Lo escucho desde donde estoy.\n"
+                            "Su sangre corre. Sus ojos miran y ven.\n"
+                            "Si lo tocas — y dudo que se deje — sentirías calor.\"\n\n"
+                            "\"Pero no envejece. No se cansa. No duerme.\n"
+                            "Está vivo en el sentido animal de la palabra,\n"
+                            "pero no en el sentido humano.\n"
+                            "Los humanos viven de cambiar. Diego no cambia hace cincuenta años.\n"
+                            "Lleva cincuenta años siendo el mismo hombre del día que entró.\n"
+                            "Y eso, caminante, no es vida. Es algo más.\"\n\n"
+                            "\"Algo que él aceptó a sabiendas. No lo engañé.\n"
+                            "Le dije: 'Esto que vas a hacer es peor que morir'.\n"
+                            "Él dijo: 'Lo sé. Lo hago igual'.\"\n\n"
+                            "\"Lo más honesto es decir: Diego no está vivo ni muerto.\n"
+                            "Diego está EN DEUDA. Cargando una deuda con el equilibrio.\n"
+                            "Hasta que tú vengas — y aquí estás — a relevarlo o a no relevarlo.\""
+                        ),
+                        "sets_flag": "pregunta_esta_vivo",
+                        "next_phase": "encuentro_diego",
+                    },
+                    {
+                        "label": "[3] \"¿Está aquí?\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"Aquí mismo. En este nivel. A no más de doscientos pasos.\"\n\n"
+                            "Levanta el brazo izquierdo — no con un dedo, con toda la mano\n"
+                            "abierta — hacia el lado izquierdo del salón.\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Por allá. Detrás de la quinta columna de huesos contando desde aquí.\n"
+                            "Hay un claro. Una pequeña hoguera que él mantiene encendida.\n"
+                            "Y junto a la hoguera, sentado en una piedra, él.\"\n\n"
+                            "\"No mira hacia acá. Nunca mira hacia este trono.\n"
+                            "Lleva cincuenta años sin mirar hacia aquí. Mira siempre el fuego.\"\n\n"
+                            "\"Sabe que estás aquí. Te oyó bajar la escalera.\n"
+                            "Ha estado oyendo cruzar los niveles, uno por uno.\n"
+                            "Pero no se ha levantado. Está esperando que vayas tú.\"\n\n"
+                            "MICTLANTECUHTLI: \"Xochitl no puede ir contigo.\"\n"
+                            "XOCHITL (sobresalto): \"¿Qué?\"\n"
+                            "MICTLANTECUHTLI: \"Si te ve junto al caminante, habla a ti primero.\n"
+                            "Y eso no le sirve al caminante. Espérate aquí.\n"
+                            "Diego va a verte después. Te lo prometo.\"\n"
+                            "XOCHITL (mirándote): \"Ve. Yo me espero.\""
+                        ),
+                        "sets_flag": "pregunta_esta_aqui",
+                        "next_phase": "encuentro_diego",
+                    },
+                ],
+            },
+
+            # ── PARTE 5 — Encuentro con Diego ────────────────────────────────
+            "encuentro_diego": {
+                "text": (
+                    "NARRADOR: Dejas el trono atrás. Caminas hacia el lado izquierdo del salón,\n"
+                    "contando columnas. Una. Dos. Tres. Cuatro. Cinco.\n\n"
+                    "Detrás de la quinta columna: un claro redondo con suelo de obsidiana\n"
+                    "ligeramente menos pulido que el resto, como si alguien lo hubiera\n"
+                    "caminado muchas veces y lo hubiera gastado a su gusto.\n\n"
+                    "En el centro, una hoguera. Las llamas son de un color que no existe\n"
+                    "en el mundo de arriba — entre azul y blanco, sin calor pero con luz.\n\n"
+                    "Junto a la hoguera, sentado en una piedra: un hombre.\n"
+                    "Manos entre las rodillas. Cabeza inclinada. Pelo largo, gris,\n"
+                    "atado con cuero. Camisa que algún día fue blanca. Botas gastadas.\n"
+                    "En el cinturón: una vaina vacía. La espada que le correspondía la cargas tú.\n\n"
+                    "NARRADOR: Diego.\n\n"
+                    "No se levanta. Habla sin levantar la cabeza — voz rasposa, guardada décadas:\n\n"
+                    "DIEGO: \"Llegaste. Pasa. Siéntate.\n"
+                    "Hay otra piedra del otro lado de la hoguera. La puse hace cuarenta años.\n"
+                    "Por si acaso.\"\n\n"
+                    "Hay, en efecto, otra piedra. Te sientas. La hoguera entre los dos.\n\n"
+                    "DIEGO (finalmente levanta la mirada):\n"
+                    "\"Eres más joven de lo que esperaba. Pero todos son siempre más jóvenes\n"
+                    "de lo que uno esperaba, ¿no? Cuando uno se queda quieto cincuenta años,\n"
+                    "el resto del mundo le parece niño.\"\n\n"
+                    "¿Qué respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"¿Cómo sabías que vendría alguien?\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Las grietas. Las cuento. Cuando la quinta vibración\n"
+                            "me llegó al pecho, supe que el techo aguantaba pero ya no por mucho.\n"
+                            "Calculé: cincuenta años son cincuenta años.\n"
+                            "Alguien tendría que venir.\""
+                        ),
+                        "next_phase": "diego_revelacion",
+                    },
+                    {
+                        "label": "[2] \"¿Cómo sabías que sería yo?\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"No sabía que serías tú. No sabía qué cara ibas a tener.\n"
+                            "Pero sí sabía algunas cosas:\n"
+                            "Que cargarías mi sangre — porque las grietas se atan a la sangre\n"
+                            "del que las tapa. Que cargarías mi espada — porque las armas\n"
+                            "reconocen a sus dueños y vuelven a la familia.\n"
+                            "Y que cargarías un dolor mío — porque mis dolores\n"
+                            "no se mueren conmigo si me quedo aquí. Se trasladan.\n"
+                            "Lo siento por eso.\""
+                        ),
+                        "next_phase": "diego_revelacion",
+                    },
+                    {
+                        "label": "[3] [Silencio] Sostener la mirada sin hablar",
+                        "response_text": (
+                            "Sostienes la mirada.\n\n"
+                            "Pasa un tiempo largo. Diego no la aparta.\n\n"
+                            "DIEGO (al fin):\n"
+                            "\"Buen silencio. No me lo esperaba.\n"
+                            "Casi todos los que se sientan en esa piedra empiezan a hablar.\n"
+                            "Algunos lloran. Algunos me gritan. Tú esperas. Diferente.\""
+                        ),
+                        "nah_delta": 1,
+                        "next_phase": "diego_revelacion",
+                    },
+                ],
+            },
+
+            # ── La revelación de Diego ────────────────────────────────────────
+            "diego_revelacion": {
+                "text": (
+                    "DIEGO:\n"
+                    "\"Voy a contarte lo que no se cuenta en los pueblos.\n"
+                    "No porque tenga miedo de que se sepa.\n"
+                    "Sino porque ya no me sirve guardarlo. Y a ti puede servirte oírlo.\"\n\n"
+                    "DIEGO (mirando el fuego frío):\n"
+                    "\"Ana. La niña que vine a recuperar hace cincuenta años. La recuperé.\n"
+                    "Pero no era la primera niña que perdí. Era la cuarta.\n"
+                    "Las primeras tres no las pude salvar. Una se llamaba Tonantzin.\n"
+                    "Otra Luz. La tercera no llegué a saber su nombre.\"\n\n"
+                    "\"Ana fue mi cuarta oportunidad. La tomé. Pero llegué a esta escalera\n"
+                    "con cuatro pesos en la espalda, no con uno.\n"
+                    "Mictlantecuhtli me ofreció el acertijo. Lo resolví.\n"
+                    "Pero antes de irme, miré hacia arriba y me dije:\n"
+                    "'Si subo, voy a vivir treinta o cuarenta años más.\n"
+                    "Y en esos años van a morir más Anas, más Tonantzines.\n"
+                    "Porque las grietas siguen. Porque yo solo cerré una.'\"\n\n"
+                    "\"Y me quedé.\"\n\n"
+                    "DIEGO (pausa):\n"
+                    "\"No fue heroísmo. Fue cobardía, casi. Cobardía de subir y ver\n"
+                    "la siguiente Ana morir y no poder hacer nada.\n"
+                    "Cincuenta años pensando esto. La conclusión: en parte fue heroísmo\n"
+                    "y en parte fue cobardía. Como casi todo lo importante que hace un hombre.\"\n\n"
+                    "¿Qué respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Eso lo entiendo.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Bueno. Que alguien lo entienda — aunque sea uno solo —\n"
+                            "me quita peso. Gracias.\""
+                        ),
+                        "next_phase": "diego_pedido",
+                    },
+                    {
+                        "label": "[2] \"No lo entiendo. Pero te creo.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Honesto. Mejor que entender es creer.\n"
+                            "El que entiende a veces se cree con derecho a opinar.\n"
+                            "El que cree solo te acompaña.\n"
+                            "Eso te lo agradezco más.\""
+                        ),
+                        "nah_delta": 1,
+                        "next_phase": "diego_pedido",
+                    },
+                    {
+                        "label": "[3] \"¿Y Xochitl?\"",
+                        "response_text": (
+                            "DIEGO (el rostro se le endurece, no por enojo, por culpa):\n"
+                            "\"Ah. Eso. Sí. Ibas a llegar ahí.\"\n\n"
+                            "\"Hace cincuenta años, en una pelea distinta, en un templo distinto —\n"
+                            "un tzitzimitl me agarró a Xochitl.\n"
+                            "Y otro tzitzimitl, más grande, iba al pueblo.\n"
+                            "Yo escogí. Fui por el grande.\n"
+                            "El que tenía a Xochitl la mató mientras yo no estaba.\"\n\n"
+                            "\"Eso no se cuenta tampoco. Para el pueblo, fui héroe — salvé el pueblo.\n"
+                            "Para mí, fui asesino — dejé morir a la niña que confiaba en mí.\"\n\n"
+                            "\"He cargado eso cincuenta años. La cargo todavía.\"\n\n"
+                            "DIEGO (pausa):\n"
+                            "\"Subió contigo, ¿verdad? ¿Qué le dijiste?\"\n\n"
+                            "JUGADOR: \"Le dije la verdad. Que el Mictlán te tenía.\n"
+                            "No le mentí.\"\n\n"
+                            "DIEGO:\n"
+                            "\"Gracias por eso. Yo no fui capaz de decírselo en su momento.\n"
+                            "Cobardía, otra vez.\""
+                        ),
+                        "sets_flag": "diego_hablo_xochitl",
+                        "nah_delta": 1,
+                        "next_phase": "diego_pedido",
+                    },
+                ],
+            },
+
+            # ── La petición de Diego ─────────────────────────────────────────
+            "diego_pedido": {
+                "text": (
+                    "DIEGO (después de un silencio largo):\n"
+                    "\"Caminante.\"\n\n"
+                    "\"Mictlantecuhtli te va a hacer un acertijo.\n"
+                    "El mismo formato del que me hizo a mí, pero pregunta distinta.\n"
+                    "La pregunta esta vez es sobre las puertas — por qué se debilitan.\"\n\n"
+                    "\"Antes de que vayas y respondas, quiero pedirte una cosa.\"\n\n"
+                    "\"No respondas pensando en mí.\n"
+                    "No respondas para liberarme, ni para reemplazarme, ni para honrarme.\n"
+                    "Responde pensando en lo que tú entendiste de los nueve niveles.\n"
+                    "Lo que tú aprendiste. Lo que tú quieres para los pueblos de arriba.\"\n\n"
+                    "\"Si tu respuesta me libera, bien. Si no, también bien.\n"
+                    "Llevo cincuenta años aquí. Cincuenta más no es mucho más.\n"
+                    "Pero si tu respuesta te traiciona a ti — para honrarme a mí —\n"
+                    "entonces no aprendiste nada del Mictlán.\n"
+                    "Y mi sacrificio no sirvió.\"\n\n"
+                    "\"¿Lo prometes?\"\n\n"
+                    "¿Qué respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Lo prometo.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Bien. Una promesa. Siempre se cobran.\n"
+                            "Esta también, pero la cobro yo, no Mictlantecuhtli.\n"
+                            "Y la cobro suavemente.\""
+                        ),
+                        "sets_flag": "promesa_a_diego",
+                        "nah_delta": 1,
+                        "next_phase": "despedida_diego",
+                    },
+                    {
+                        "label": "[2] \"No te puedo prometer eso. Voy a pensar en ti igual.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Honesto. Como tú decidas pensar en mí, lo aguantaré.\n"
+                            "Pero por favor — te lo pido sin compromiso —\n"
+                            "no decidas algo que detestes a largo plazo solo por mi memoria.\n"
+                            "La memoria pesa, pero no debe gobernar.\""
+                        ),
+                        "next_phase": "despedida_diego",
+                    },
+                    {
+                        "label": "[3] \"Lo intentaré.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Intentar es lo único que pedimos los muertos.\n"
+                            "Los vivos siempre intentan. Algunos hasta lo logran. Bien.\""
+                        ),
+                        "sets_flag": "compromiso_parcial_diego",
+                        "next_phase": "despedida_diego",
+                    },
+                    {
+                        "label": "[XOCHITL] Xochitl te toca el brazo antes de responder",
+                        "requires_flag_any": ["compromiso_amor"],
+                        "response_text": (
+                            "Xochitl aparece junto a ti — Mictlantecuhtli la dejó acercarse.\n\n"
+                            "DIEGO (mirándola, sin palabras al principio):\n"
+                            "\"...\"\n"
+                            "DIEGO: \"Hola, Xochitl.\"\n"
+                            "XOCHITL (firme, mirándolo): \"Hola, Diego.\"\n\n"
+                            "Un silencio que tiene cincuenta años dentro.\n\n"
+                            "XOCHITL (a ti, sin dejar de mirar a Diego):\n"
+                            "\"Lo que prometiste — recuérdalo ahora.\n"
+                            "Sea lo que sea que él te pida.\"\n\n"
+                            "DIEGO (despacio):\n"
+                            "\"Le prometiste algo.\"\n"
+                            "JUGADOR: \"Sí.\"\n"
+                            "DIEGO: \"Bien. Eso... eso está bien.\n"
+                            "Yo no se lo prometí nunca. Tú sí. Eso te hace mejor.\"\n\n"
+                            "\"Entonces: ¿lo prometes?\""
+                        ),
+                        "sets_flags": ["promesa_a_diego", "reencuentro_diego_xochitl"],
+                        "nah_delta": 2,
+                        "next_phase": "despedida_diego",
+                    },
+                ],
+            },
+
+            # ── Despedida de Diego ────────────────────────────────────────────
+            "despedida_diego": {
+                "text": (
+                    "DIEGO (se levanta — por primera vez en cincuenta años):\n\n"
+                    "NARRADOR: No es metáfora. Son cincuenta años.\n"
+                    "Se levanta despacio, como quien recuerda cómo era ser cuerpo.\n"
+                    "Estira los brazos. Mira sus manos como si no las reconociera.\n\n"
+                    "DIEGO:\n"
+                    "\"Vete. Está esperándote allá.\n"
+                    "Haz tu parte. Yo me quedo aquí — por última vez quiero dejar\n"
+                    "la hoguera apagándose sola, sin que la apague yo.\n"
+                    "Después subo. Sea cual sea tu decisión.\"\n\n"
+                    "¿Cómo te despides?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Gracias.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Por nada. Y también — gracias a ti, por venir.\n"
+                            "La espera fue la parte más dura.\""
+                        ),
+                        "next_phase": "regreso_trono",
+                    },
+                    {
+                        "label": "[2] \"Hasta luego, Diego.\"",
+                        "response_text": (
+                            "DIEGO:\n"
+                            "\"Hasta luego. Si todo sale bien, en breve.\n"
+                            "Si no, también, pero más tarde.\""
+                        ),
+                        "next_phase": "regreso_trono",
+                    },
+                    {
+                        "label": "[3] Darle la mano antes de irte",
+                        "response_text": (
+                            "Extiendes la mano.\n\n"
+                            "Diego la mira un momento — como si no estuviera seguro\n"
+                            "de que funcionara todavía. Luego la estrecha.\n\n"
+                            "Su mano está caliente. Viva. Real.\n\n"
+                            "DIEGO (muy bajo):\n"
+                            "\"...\"\n\n"
+                            "\"Ojalá Xochitl me hubiera dado esa mano alguna vez.\n"
+                            "Pero no se la pedí cuando podía.\n"
+                            "Tú la pediste a tu Xochitl. Mejor.\""
+                        ),
+                        "sets_flag": "apretón_mano_diego",
+                        "nah_delta": 1,
+                        "next_phase": "regreso_trono",
+                    },
+                ],
+            },
+
+            # ── Regreso al trono ─────────────────────────────────────────────
+            "regreso_trono": {
+                "text": (
+                    "NARRADOR: Te levantas. Caminas de regreso al trono.\n"
+                    "Cuentas las columnas al revés. Cinco. Cuatro. Tres. Dos. Una.\n\n"
+                    "Mictlantecuhtli no se ha movido.\n"
+                    "El polvo blanco sigue jugando entre sus dedos.\n"
+                    "Xochitl está parada — no flotando, parada — al lado del trono,\n"
+                    "esperándote. Algo en ella ha cambiado, aunque no sabes qué.\n\n"
+                    "XOCHITL (muy bajo, solo para ti): \"¿Cómo te fue?\"\n\n"
+                    "¿Qué dices?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Es persona. Ya no es leyenda.\"",
+                        "response_text": (
+                            "XOCHITL:\n"
+                            "\"Sí. A mí también me pasó eso, pero hace cincuenta años.\n"
+                            "Bienvenido a verlo como humano.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Caminante. Lo viste. Hablaste. Sentiste lo que tenías que sentir.\n"
+                            "Bien. Ahora, si me permites, vuelvo a mi función. Acertijo.\""
+                        ),
+                        "next_phase": "decision_previa",
+                    },
+                    {
+                        "label": "[2] \"Me pidió algo. Que no decida por él.\"",
+                        "response_text": (
+                            "XOCHITL:\n"
+                            "\"Los que han estado mucho tiempo solos siempre piden algo.\n"
+                            "Espero que sea algo que puedas darle.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Caminante. Lo viste. Lo que Diego te pidió — eso es tuyo.\n"
+                            "Yo no intervengo ahí. Pero sí me concierne lo siguiente.\n"
+                            "Acertijo.\""
+                        ),
+                        "next_phase": "decision_previa",
+                    },
+                    {
+                        "label": "[3] \"Después te cuento. Ahora viene el acertijo.\"",
+                        "response_text": (
+                            "XOCHITL:\n"
+                            "\"Después. Sí. Ve.\"\n\n"
+                            "MICTLANTECUHTLI (algo en la postura cambia — casi aprobación):\n"
+                            "\"El vivo que enfoca. Bien. Acertijo.\""
+                        ),
+                        "esp_delta": 1,
+                        "next_phase": "decision_previa",
+                    },
+                ],
+            },
+
+            # ── PARTE 6 — Decisión previa al acertijo ────────────────────────
+            "decision_previa": {
+                "text": (
+                    "MICTLANTECUHTLI:\n"
+                    "\"Pero antes del acertijo, una decisión preliminar.\n"
+                    "Acabas de verlo. Hablaron. Saliste con una postura.\n"
+                    "Necesito saber con cuál te quedas.\"\n\n"
+                    "¿Qué quieres ahora con respecto a Diego?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Quiero que descanse. Que salga de aquí.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"Para que Diego deje de estar aquí, hay tres caminos.\n"
+                            "Uno: alguien lo reemplaza — tú.\n"
+                            "Dos: la grieta se cura de raíz — eso requiere entender\n"
+                            "por qué se abre, y eso es el acertijo.\n"
+                            "Tres: aceptamos que la grieta va a abrirse\n"
+                            "y aprendemos a vivir con eso.\"\n\n"
+                            "\"La uno es tu sacrificio. La dos es el balance. La tres es la liberación.\n"
+                            "Tu pregunta orienta cómo te presento las opciones.\n"
+                            "El acertijo decide cuál tomas.\""
+                        ),
+                        "sets_flag": "prioridad_liberar_diego",
+                        "next_phase": "acertijo",
+                    },
+                    {
+                        "label": "[2] \"Quiero entender qué opciones existen realmente.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI:\n"
+                            "\"Mmm. Esa respuesta no esperaba.\n"
+                            "Diego ya tenía la respuesta antes de bajar.\n"
+                            "Tú vienes con la pregunta abierta. Eso es muy distinto.\"\n\n"
+                            "\"Te voy a decir lo que yo veo, después de tantos siglos:\n"
+                            "las puertas son un parche. Mal puesto. Mal pensado.\n"
+                            "Lo que hace falta no es cerrarlas mejor.\n"
+                            "Lo que hace falta es entender por qué las pusimos.\n"
+                            "Y, si encontramos el por qué — y si vemos que ya no aplica — quitarlas.\"\n\n"
+                            "\"Pero eso es lo más difícil de todo.\n"
+                            "Más difícil que cerrarlas mejor. Mucho más.\n"
+                            "El acertijo te lo explica. Escucha bien.\""
+                        ),
+                        "sets_flag": "prioridad_entender",
+                        "nah_delta": 1,
+                        "next_phase": "acertijo",
+                    },
+                    {
+                        "label": "[3] \"Quiero lo que sea mejor para los pueblos de arriba.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI (pausa):\n"
+                            "\"Los pueblos.\"\n\n"
+                            "\"No Diego. No tú. Los pueblos.\"\n\n"
+                            "Una pausa que se siente larga, y termina con algo\n"
+                            "que podría interpretarse como respeto.\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Diego siempre pensó en los pueblos. Pero tú lo dices diferente.\n"
+                            "Diego decía: 'proteger a los pueblos'. Tú dices: 'lo mejor para ellos'.\n"
+                            "La diferencia es sutil y es todo.\n"
+                            "Proteger implica que están en peligro. Mejorar implica que pueden crecer.\"\n\n"
+                            "\"Escucha el acertijo con eso en mente.\""
+                        ),
+                        "sets_flag": "prioridad_pueblos",
+                        "nah_delta": 1,
+                        "next_phase": "acertijo",
+                    },
+                ],
+            },
+
+            # ── PARTE 7 — El acertijo final ──────────────────────────────────
+            "acertijo": {
+                "text": (
+                    "MICTLANTECUHTLI (el polvo blanco sube en una columna\n"
+                    "que toma la forma de una puerta antigua de madera carcomida):\n\n"
+                    "\"Una pregunta. La que des decide el final de tu visita —\n"
+                    "y el destino del de dos sangres.\"\n\n"
+                    "\"No hay segunda oportunidad.\"\n\n"
+                    "\"Pregunta:\"\n\n"
+                    "\"¿Por qué las puertas se debilitan cada cincuenta años?\""
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Porque los vivos olvidan a los muertos.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI (pausa larga):\n"
+                            "\"Bien. No es la respuesta canónica. Pero tampoco es errada.\"\n\n"
+                            "\"Los vivos olvidan a los muertos. Es verdad.\n"
+                            "Cada cincuenta años, los nietos de los nietos ya no recuerdan\n"
+                            "los nombres de los antepasados. Los altares de Día de Muertos\n"
+                            "se llenan de fotos, pero las fotos pierden caras con el tiempo.\n"
+                            "Los nombres se borran de las lápidas. Las historias se cuentan menos.\n"
+                            "Y cuando los muertos pierden su ancla en el recuerdo de los vivos,\n"
+                            "las puertas pierden tensión. Se debilitan. Se agrietan.\"\n\n"
+                            "\"Tu respuesta es nahua. Profundamente nahua.\n"
+                            "La nuestra siempre fue una cultura de memoria, de ofrenda,\n"
+                            "de mantener los nombres vivos.\"\n\n"
+                            "\"Esta respuesta lleva al camino de la liberación con condiciones.\n"
+                            "Diego sube contigo. Fundan una escuela de memoria.\n"
+                            "Cada cincuenta años, los nuevos guardianes recuerdan a los muertos\n"
+                            "por nombre. Las grietas se mantienen pequeñas. No se cierran.\n"
+                            "No se abren del todo. Solo se contienen.\"\n\n"
+                            "XOCHITL (al oír esto, en voz muy baja): \"Podría funcionar.\"\n\n"
+                            "MICTLANTECUHTLI: \"¿Aceptas este camino?\"\n\n"
+                            "JUGADOR: \"Sí. Los pueblos van a recordar.\"\n\n"
+                            "MICTLANTECUHTLI (y algo en el salón cambia — las columnas\n"
+                            "de hueso vibran, un solo tono bajo, como aprobación de los muertos):\n"
+                            "\"Entonces ve. Diego te sigue.\""
+                        ),
+                        "sets_flags": ["eleccion_final_c", "acertijo_olvido"],
+                        "nah_delta": 2,
                         "next_phase": None,
                     },
                     {
-                        "label": "[B] \"Balance — Xochitl libre, Diego libre, yo de vuelta.\"",
+                        "label": "[2] \"Porque los muertos envidian a los vivos.\"",
                         "response_text": (
-                            "MICTLANTECUHTLI: \"El balance. Diego lo intentó — "
-                            "no tenía con qué pagarlo.\"\n"
-                            "\"Tú tienes sangre de dos mundos. Eso puede ser el precio.\"\n\n"
-                            "\"¿Ofreces tu sangre dual como sello?\"\n"
-                            "JUGADOR: \"Sí.\"\n\n"
-                            "El trono acepta. Algo en ti cambia — no se pierde, "
-                            "pero queda marcado para siempre."
+                            "MICTLANTECUHTLI (la luz en sus cuencas se apaga un instante, luego vuelve):\n"
+                            "\"Mmm.\"\n\n"
+                            "\"Esa respuesta la he oído. No es la primera vez.\n"
+                            "Pero es errada — al menos parcialmente.\n"
+                            "Los muertos no envidian a los vivos. Los muertos extrañan a los vivos.\n"
+                            "Quien envidia quiere lo del otro. Quien extraña recuerda lo propio\n"
+                            "que ya no tiene. Son emociones distintas.\"\n\n"
+                            "\"Pero tu respuesta apunta a algo cierto: hay tensión entre los dos lados.\n"
+                            "Los muertos quieren — algunos quieren — volver.\n"
+                            "Los vivos quieren controlar. Esa tensión existe.\"\n\n"
+                            "\"Tu respuesta dice 'los muertos quieren lo de los vivos'.\n"
+                            "La única forma de calmar a los muertos en esa lógica\n"
+                            "es darles a uno de los vivos. Tú.\"\n\n"
+                            "\"Es el camino del sacrificio. Tu lugar aquí.\n"
+                            "Diego sube. Tú te quedas. Guardián nuevo, tapa nueva.\n"
+                            "Las puertas aguantan otros cincuenta años, quizás más.\"\n\n"
+                            "XOCHITL (muy quieta): \"...\"\n\n"
+                            "JUGADOR: \"Acepto. Yo me quedo.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Entonces el contrato es tuyo.\n"
+                            "Diego va a discutir — siempre discute. Pero va a aceptar.\n"
+                            "Porque sabe que no tienes miedo. Y el miedo es lo que\n"
+                            "hace que los guardianes fallen a la larga.\"\n\n"
+                            "MICTLANTECUHTLI: \"Bienvenido al Mictlán, guardián.\""
                         ),
-                        "sets_flag": "eleccion_final_b",
+                        "sets_flags": ["eleccion_final_a", "acertijo_envidia"],
+                        "esp_delta": 2,
                         "next_phase": None,
                     },
                     {
-                        "label": "[C] \"Liberar a todos los que eligieron quedarse esperando.\"",
-                        "requires_flag_any": ["compromiso_amor", "resolucion_liberacion"],
+                        "label": "[3] \"Porque no debería haber puertas. Ambos mundos son uno.\"",
                         "response_text": (
-                            "MICTLANTECUHTLI: \"Todos.\"\n"
-                            "No es pregunta.\n\n"
-                            "\"Ningún vivo ha pedido eso.\"\n\n"
-                            "Larga pausa. La más larga.\n\n"
-                            "\"Las almas que eligieron esperar pueden elegir de nuevo. "
-                            "Esa es la libertad que pides: el derecho a elegir.\"\n\n"
-                            "\"El costo es el canto que los dos mundos puedan escuchar.\"\n"
-                            "\"¿Tienes esa voz?\"\n\n"
-                            "JUGADOR: \"Lo averiguamos.\""
+                            "MICTLANTECUHTLI (pausa muy larga):\n"
+                            "\"Sí.\"\n\n"
+                            "\"Esa es la respuesta más antigua.\n"
+                            "La que solo unos pocos han escuchado en mil años.\n"
+                            "Y aún menos han dado.\"\n\n"
+                            "\"Las puertas no debilitan porque sí.\n"
+                            "Debilitan porque están mal puestas.\n"
+                            "Porque vida y muerte no son dos cosas separadas que necesiten frontera.\n"
+                            "Son un mismo flujo, con dos modos.\n"
+                            "La puerta interrumpe el flujo. El flujo se enoja.\n"
+                            "Se debilita la puerta. Cada cincuenta años, el flujo recuerda\n"
+                            "que está mal y empuja.\"\n\n"
+                            "\"La solución no es reforzar la puerta. Es disolverla.\n"
+                            "Hacer que vida y muerte se toquen sin barrera, pero también sin caos.\n"
+                            "Un nuevo pacto.\"\n\n"
+                            "\"Esta respuesta lleva al camino del balance.\n"
+                            "Diego sube contigo. Las puertas se vuelven permeables.\n"
+                            "Los dos mundos vuelven a tocarse.\n"
+                            "El costo: las tres reliquias de Diego — Tlachicotl, Tonatiuh,\n"
+                            "el Escudo Ceiba — quedan aquí. Conmigo. Como sello del nuevo pacto.\"\n\n"
+                            "XOCHITL (mirándote, en voz baja):\n"
+                            "\"El nuevo pacto. Eso era lo que él hubiera querido si hubiera\n"
+                            "podido imaginarlo. Pero solo lo imaginas cuando ya bajaste\n"
+                            "los nueve niveles y viste desde adentro.\"\n\n"
+                            "JUGADOR: \"Acepto. El pacto nuevo.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Las reliquias al trono. Tú al mundo de arriba.\n"
+                            "Diego también. Y los dos mundos, juntos, como siempre debieron ser.\"\n\n"
+                            "Las columnas de hueso vibran. No de susto. De alivio."
                         ),
-                        "sets_flag": "eleccion_final_c",
+                        "sets_flags": ["eleccion_final_b", "acertijo_balance"],
+                        "esp_delta": 1, "nah_delta": 1,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[4] \"Porque el miedo crea las grietas.\"",
+                        "response_text": (
+                            "MICTLANTECUHTLI (la luz de las cuencas se intensifica):\n"
+                            "\"Esa.\"\n\n"
+                            "\"Esa es una respuesta que muy pocos vivos han dado.\n"
+                            "Y casi ninguno la entendió a fondo cuando la dijo.\"\n\n"
+                            "\"El miedo crea las grietas. Sí.\n"
+                            "El miedo de los vivos a los muertos. El miedo de los pueblos al Mictlán.\n"
+                            "El miedo a que las criaturas crucen. El miedo a que el orden caiga.\n"
+                            "Cada miedo tira un golpe pequeño contra las puertas.\n"
+                            "Cada cincuenta años, los miedos acumulados ganan.\"\n\n"
+                            "\"Las puertas no son la cura para el miedo. Son su síntoma.\n"
+                            "Si quieres cerrar las puertas para siempre,\n"
+                            "tienes que cerrar el miedo.\n"
+                            "Y el miedo no se cierra. El miedo se vive — se entiende —\n"
+                            "se acepta — y se transforma.\"\n\n"
+                            "\"Esta respuesta requiere más coraje que las otras.\n"
+                            "Porque la solución no es construir un muro.\n"
+                            "La solución es enseñarle a los pueblos\n"
+                            "a no tener miedo del Mictlán.\"\n\n"
+                            "\"Si confirmas: Diego sube contigo.\n"
+                            "Fundan una escuela de aceptación.\n"
+                            "No de memoria — eso fue la respuesta uno.\n"
+                            "No de pacto nuevo — eso fue la tres.\n"
+                            "Donde se enseña a los vivos que la muerte no es enemiga.\"\n\n"
+                            "MICTLANTECUHTLI (pausa muy larga — algo que no habías visto antes:\n"
+                            "el polvo blanco cae de su mano y no lo recoge):\n"
+                            "\"Yo también les tengo miedo a ustedes.\n"
+                            "Llevo siglos teniéndoles miedo.\n"
+                            "Por eso esto está como está.\n"
+                            "Las puertas las pedimos también nosotros, los muertos.\n"
+                            "No solo los vivos.\"\n\n"
+                            "XOCHITL (apenas en voz audible): \"Lo dijo. Lo dijo de verdad.\"\n\n"
+                            "JUGADOR: \"Entonces los dos aprendemos. Juntos.\"\n\n"
+                            "MICTLANTECUHTLI:\n"
+                            "\"Entonces los dos aprendemos.\n"
+                            "Ve. Diego te sigue.\n"
+                            "Y la escuela — yo mando a alguien también.\n"
+                            "Para aprender, no para vigilar.\"\n\n"
+                            "Algo en el salón cambia. Las columnas de hueso ya no están frías.\n"
+                            "Hay calor en el Mictlán — quizás el primero en siglos."
+                        ),
+                        "sets_flags": ["eleccion_final_c", "acertijo_miedo",
+                                       "mictlan_reconoce_miedo", "nivel9_co_maestros"],
+                        "nah_delta": 3,
                         "next_phase": None,
                     },
                 ],
