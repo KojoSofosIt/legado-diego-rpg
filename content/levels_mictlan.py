@@ -768,6 +768,125 @@ CHALLENGES_MICTLAN: dict[str, dict] = {
                         "sets_flag": "xolo_ignorado",
                         "next_phase": "caminante_directo",
                     },
+                    {
+                        "label": "[ESCUCHAR] Agacharte — hay un chapoteo bajo tus pies",
+                        "response_text": (
+                            "No hay agua en Itzehecayan. El viento de obsidiana seca todo.\n"
+                            "Y sin embargo: chapoteo. Bajo la tierra. Movimiento acuático.\n\n"
+                            "XOCHITL (sorprendida): \"¿Oyes eso?\"\n\n"
+                            "Pones la palma en el suelo. Frío. Húmedo por debajo.\n"
+                            "Hay algo bajo el páramo. Y ese algo se acerca."
+                        ),
+                        "sets_flag": "escuchaste_chapoteo",
+                        "nah_delta": 1,
+                        "next_phase": "ahuizotl_encuentro",
+                    },
+                ],
+            },
+            "ahuizotl_encuentro": {
+                "text": (
+                    "Una grieta en el suelo, casi invisible bajo las partículas de viento.\n"
+                    "Por ella asoma primero una cola — larga, prensil, terminada en\n"
+                    "algo que parece una mano de niño.\n"
+                    "Luego un cuerpo. Nutria, en tamaño. Ojos de obsidiana mojada.\n\n"
+                    "AHUÍZOTL (voz telepática, sin mover la boca):\n"
+                    "\"Heredero. Te siento desde el río de arriba.\n"
+                    "Bajo aquí hay humedad. Hay ríos subterráneos donde el viento no llega.\n"
+                    "Yo conozco las corrientes. Puedo guiarte.\"\n\n"
+                    "XOCHITL: \"Es el Ahuízotl. Los ríos del mundo de arriba\n"
+                    "tienen raíces que llegan hasta el Mictlán. Por eso puede estar aquí.\"\n\n"
+                    "¿Qué respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Guíame.\"",
+                        "response_text": (
+                            "AHUÍZOTL: \"Entra. La grieta es estrecha, pero cabes.\"\n\n"
+                            "Te cuelas dentro. Un túnel natural baja suavemente.\n"
+                            "En pocos minutos el zumbido del viento se apaga.\n"
+                            "Puedes oír, nítida, el agua corriendo."
+                        ),
+                        "sets_flag": "ahuizotl_guia_aceptado",
+                        "next_phase": "ahuizotl_subterraneo",
+                    },
+                    {
+                        "label": "[2] \"¿Por qué me ayudas?\"",
+                        "response_text": (
+                            "AHUÍZOTL: \"La deuda del río sigue sin saldarse.\n"
+                            "Y además... tú no matas. Los que no matan, me alían.\"\n\n"
+                            "Una pausa.\n\n"
+                            "AHUÍZOTL: \"Entra.\"\n\n"
+                            "Te cuelas dentro. Un túnel natural desciende.\n"
+                            "El zumbido del viento se apaga con cada paso."
+                        ),
+                        "sets_flag": "ahuizotl_razon_revelada",
+                        "nah_delta": 1,
+                        "next_phase": "ahuizotl_subterraneo",
+                    },
+                    {
+                        "label": "[3] \"¿Qué quieres a cambio?\"",
+                        "response_text": (
+                            "AHUÍZOTL: \"Un favor. Cuando llegue. Lo sabrás.\"\n\n"
+                            "XOCHITL (a ti, en voz baja): \"Trato abierto.\n"
+                            "No te dice el precio todavía.\"\n\n"
+                            "JUGADOR: \"Acepto.\"\n\n"
+                            "AHUÍZOTL: \"Bien. Entra.\"\n\n"
+                            "Te cuelas en la grieta. El aire cambia de inmediato:\n"
+                            "seco a húmedo. Cortante a vivo."
+                        ),
+                        "sets_flags": ["ahuizotl_trato_abierto"],
+                        "esp_delta": 1,
+                        "next_phase": "ahuizotl_subterraneo",
+                    },
+                ],
+            },
+            "ahuizotl_subterraneo": {
+                "text": (
+                    "El Ahuízotl camina delante. Su cola-mano toca el agua\n"
+                    "que corre junto a ustedes — puede leer el corriente,\n"
+                    "saber exactamente dónde están, qué hay arriba, cuánto falta.\n\n"
+                    "AHUÍZOTL (mientras caminan): \"El de dos sangres también vino\n"
+                    "por esta ruta. Yo lo guié. No recordaba su nombre.\n"
+                    "Ahora recuerdo el tuyo, aunque no me lo hayas dicho.\"\n\n"
+                    "XOCHITL (muy quieta): \"¿Cómo se llama?\"\n"
+                    "AHUÍZOTL: \"No se lo digo a ella. Solo a ti.\"\n\n"
+                    "Más adelante, una luz. La salida. Sales al borde del Nivel 5.\n"
+                    "Saltaste Itzehecayan casi entero — sin cortes nuevos.\n\n"
+                    "AHUÍZOTL (asomando la cabeza desde la grieta, antes de retirarse):\n"
+                    "\"Deuda casi saldada. Un favor más, heredero. Solo uno.\n"
+                    "Lo pediré en los niveles que vienen. Cuando lo escuches, lo reconocerás.\"\n\n"
+                    "¿Qué respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Cuenta conmigo.\"",
+                        "response_text": (
+                            "AHUÍZOTL: \"Ya cuento.\"\n\n"
+                            "La cola-mano desaparece bajo la grieta.\n"
+                            "El sonido del agua se aleja.\n\n"
+                            "XOCHITL: \"No lo había visto antes — el Ahuízotl que guía.\n"
+                            "Normalmente los Ahuizotl arrastran. Este cargó.\"\n\n"
+                            "[FAVOR DEL AHUÍZOTL — lo cobrará en el Nivel 7 con Itzcuintli]"
+                        ),
+                        "sets_flags": ["favor_ahuizotl", "nivel4_cruce_ahuizotl"],
+                        "esp_delta": 1, "nah_delta": 1,
+                        "next_phase": None,
+                        "grants_items": ["piel_viento"],
+                    },
+                    {
+                        "label": "[2] [Asentir en silencio]",
+                        "response_text": (
+                            "El Ahuízotl acepta el silencio sin quejarse.\n"
+                            "La cola-mano desaparece.\n\n"
+                            "XOCHITL: \"Los tratos en silencio también son tratos.\n"
+                            "Más vinculantes, a veces.\"\n\n"
+                            "[FAVOR DEL AHUÍZOTL — prometido en silencio]"
+                        ),
+                        "sets_flags": ["favor_ahuizotl", "nivel4_cruce_ahuizotl"],
+                        "nah_delta": 2,
+                        "next_phase": None,
+                        "grants_items": ["piel_viento"],
+                    },
                 ],
             },
             "xolo_guia": {
