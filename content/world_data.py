@@ -7,7 +7,7 @@ ROOMS = {
         "description": (
             "Una choza humilde al borde del pueblo. El olor a copal llena el cuarto. "
             "Sobre un altar de piedra volcánica descansan flores de cempasúchil y una foto "
-            "descolorida de un guerrero con dos sangres en el rostro. "
+            "descolorida de un guerrero con dos manchas de sangre en el rostro. "
             "Citlali está sentada junto al fuego, mirándote."
         ),
         "exits": {"norte": "plaza_pueblo", "este": "casa_citlali"},
