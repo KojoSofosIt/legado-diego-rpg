@@ -1327,7 +1327,7 @@ CHALLENGES_MICTLAN: dict[str, dict] = {
                     },
                     {
                         "label": "[NAH] Hablarle de la traición — reconocer lo que le hicieron",
-                        "requires_flag_any": ["yaotl_historia_revelada", "caminante_trato", "info_yaotl"],
+                        "requires_flag_any": ["yaotl_historia_revelada", "caminante_trato"],
                         "response_text": (
                             "JUGADOR: \"Sé lo que te hizo. El conquistador. "
                             "Moriste cubriéndolo y él se fue. "
