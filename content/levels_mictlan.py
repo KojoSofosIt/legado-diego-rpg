@@ -136,6 +136,18 @@ ITEMS_MICTLAN: dict[str, dict] = {
         "type": "lore",
         "defense": 1,
     },
+    # ── Nivel 7 — Teyollocualoyan ─────────────────────────────────────────────
+    "roseta_itzcuintli": {
+        "name": "Roseta de Itzcuintli",
+        "description": (
+            "Una de las rosetas del pelaje del jaguar guardián — "
+            "las que brillan por dentro, como brasas bajo la piel. "
+            "Tibia al tacto. Late levemente, como si tuviera pulso propio. "
+            "Enciende fuego una sola vez cuando todo lo demás falle."
+        ),
+        "type": "ritual",
+        "use_msg": "La roseta arde con un calor que viene de antes del mundo. El fuego que produce dura exactamente lo que necesitas.",
+    },
     # ── Nivel 8 — Apochcaloca ─────────────────────────────────────────────────
     "cristal_niebla": {
         "name": "Cristal de la Niebla",
@@ -333,23 +345,54 @@ ROOMS_MICTLAN: dict[str, dict] = {
         "milestone": "nivel6_completado",
     },
 
-    # ── NIVEL 7 — Corredor del Frío ───────────────────────────────────────────
+    # ── NIVEL 7 — Teyollocualoyan ─────────────────────────────────────────────
     "nivel7_corredor": {
-        "name": "Itztlan — Corredor del Frío Eterno",
+        "name": "Teyollocualoyan — La Selva de las Sombras",
         "description": (
-            "El séptimo nivel del Mictlán: un corredor de hielo y silencio. "
-            "Las paredes son cristal negro que refleja versiones tuyas "
-            "que tomaron otros caminos. Fríos. Quietos. "
-            "Al fondo, una grieta de oscuridad total: el octavo nivel."
+            "Los árboles del séptimo nivel no son árboles — son columnas de algo parecido "
+            "a madera que gotea savia oscura, espesa, que sabe a sangre vieja. "
+            "El suelo está cubierto de hongos bioluminiscentes. "
+            "Cada paso tuyo los presiona y ellos responden con un destello azul-verde "
+            "que dura dos segundos. Dejas un rastro de luz detrás de ti. "
+            "No hay manera de ocultarse aquí. "
+            "Al fondo del camino, un claro fosforescente y, sobre una piedra negra del "
+            "tamaño de una casa pequeña: Itzcuintli, el Devorador de Corazones."
         ),
-        "exits": {"sur": "nivel6_cruce", "norte": "nivel8_entrada"},
+        "exits": {"sur": "nivel6_cruce"},
+        "locked_exits": {
+            "norte": {
+                "destination": "nivel7_salida",
+                "requires_challenge": "nivel7_itzcuintli",
+                "msg": "Itzcuintli bloquea el paso al norte. Debes enfrentarlo.",
+            }
+        },
         "items": [],
         "creatures": [],
         "npcs": [],
         "features": {
-            "cristal":  "Paredes de hielo negro. Cada reflejo muestra una versión diferente de ti.",
-            "frio":     "Un frío que no quema — congela los pensamientos en el lugar donde están.",
-            "grieta":   "Al norte, la oscuridad del Apochcaloca. Ni luz ni forma. Solo ausencia.",
+            "hongos":     "Bioluminiscentes. Cada pisada deja un rastro de luz azul-verde que dura dos segundos.",
+            "arboles":    "Columnas de madera negra que gotea savia oscura. No son árboles. Son otra cosa.",
+            "itzcuintli": "En el claro al fondo. Su lomo casi alcanza las copas negras. Tiene ocho garras por pata. La oreja izquierda no está.",
+            "circulo":    "Un círculo oscuro a veinte metros donde los hongos no brillan. Perfecto. No natural.",
+        },
+    },
+
+    "nivel7_salida": {
+        "name": "Teyollocualoyan — Al Otro Lado del Jaguar",
+        "description": (
+            "El claro de Itzcuintli queda detrás. "
+            "La selva de sombras se cierra y el camino desciende hacia algo húmedo. "
+            "Las paredes empiezan a gotear. El goteo se vuelve chorro. "
+            "Y al fondo, una cortina blanca, densa, inmóvil a pesar de que todo alrededor se mueve: "
+            "el Apochcaloca."
+        ),
+        "exits": {"sur": "nivel7_corredor", "norte": "nivel8_entrada"},
+        "items": [],
+        "creatures": [],
+        "npcs": [],
+        "features": {
+            "humedad": "Las paredes gotean agua sin origen visible. El sonido cubre el rastro del jaguar.",
+            "niebla":  "La cortina blanca al norte no se mueve aunque todo alrededor lo haga.",
         },
         "milestone": "nivel7_completado",
     },
@@ -1599,6 +1642,1007 @@ CHALLENGES_MICTLAN: dict[str, dict] = {
                         ),
                         "sets_flags": ["compromiso_amor", "resolucion_liberacion"],
                         "esp_delta": 1, "nah_delta": 2,
+                        "next_phase": None,
+                    },
+                ],
+            },
+        },
+    },
+
+    # ── Nivel 7 — Teyollocualoyan ────────────────────────────────────────────
+    "nivel7_itzcuintli": {
+        "name": "Teyollocualoyan — Itzcuintli, el Devorador de Corazones",
+        "entry_text": (
+            "Caminas hacia el claro. Los hongos bajo tus pies estallan en luz azul-verde.\n"
+            "Dejas un rastro brillante detrás de ti — no hay manera de ocultarse.\n\n"
+            "Y lo ves.\n\n"
+            "NARRADOR: Itzcuintli no es un jaguar. Lo fue, hace eras.\n"
+            "Ahora es algo más grande. Su lomo casi alcanza la altura de las copas negras.\n"
+            "Tiene ocho garras por pata — no cuatro. Cada colmillo es más largo que tu antebrazo.\n"
+            "Su pelaje es negro con rosetas que brillan por dentro,\n"
+            "como si bajo la piel hubiera brasas. Y la oreja izquierda —\n"
+            "solo hay una cicatriz antigua, lisa, del tamaño de una tortilla.\n\n"
+            "Te mira. No con un ojo, no con dos — con los dos al mismo tiempo\n"
+            "y con algo más, un sentido que no tienes. Te ha olido. Te ha probado en el aire.\n"
+            "Te conoce ya.\n\n"
+            "ITZCUINTLI (rugido que se convierte en palabras, la voz vieja como una cueva):\n"
+            "\"Carne y sangre en mi reino. ¿Sabes cuánto tiempo ha pasado desde mi última\n"
+            "comida verdadera?\"\n\n"
+            "NARRADOR: El rugido te llega al pecho.\n"
+            "Los hongos bajo tus pies brillan más fuerte, asustados."
+        ),
+        "start_phase": "llegada",
+        "phases": {
+            # ── Llegada ───────────────────────────────────────────────────────
+            "llegada": {
+                "text": (
+                    "Itzcuintli te tiene medido. Lo sientes antes de que haga nada.\n\n"
+                    "XOCHITL (voz muy baja): \"Antes de que elijas qué hacer,\n"
+                    "él ya eligió qué hacerte. Solo está esperando que justifiques\n"
+                    "su decisión de un lado o del otro.\"\n\n"
+                    "¿Qué haces mientras te observa?"
+                ),
+                "options": [
+                    {
+                        "label": "[ESP] Mantener la postura — no retroceder ni avanzar",
+                        "response_text": (
+                            "No te mueves. Ni un paso atrás, ni un paso adelante.\n"
+                            "Dejas que Itzcuintli te lea.\n\n"
+                            "ITZCUINTLI (lento): \"Quieto. El de dos sangres también se\n"
+                            "quedó quieto. Veo que aprendiste de él.\"\n"
+                            "Una pausa.\n"
+                            "\"O aprendiste solo. Eso es peor para mí y mejor para ti.\"\n\n"
+                            "[ITZCUINTLI: NEUTRAL — reconoce aplomo]"
+                        ),
+                        "sets_flag": "nivel7_llegada_quieto",
+                        "next_phase": "propuesta",
+                    },
+                    {
+                        "label": "[NAH] Escuchar la selva — ¿hay algo más aquí?",
+                        "response_text": (
+                            "Cierras los ojos un momento. Oídos abiertos.\n\n"
+                            "El claro tiene dos sonidos: el rugido de Itzcuintli,\n"
+                            "y algo más pequeño, más suave, en el borde oscuro a tu izquierda.\n"
+                            "Un círculo donde los hongos no brillan. Ahí hay algo.\n\n"
+                            "ITZCUINTLI: \"Olfateas el lugar. El de dos sangres hizo lo mismo.\n"
+                            "Él no escuchó a Chantico. Tú sí la oíste, ¿verdad?\"\n"
+                            "Sus brasas se calientan levemente bajo el pelaje.\n"
+                            "\"Interesante.\"\n\n"
+                            "[ITZCUINTLI: CURIOSO — percibiste a Chantico]"
+                        ),
+                        "sets_flag": "nivel7_llegada_chantico",
+                        "nah_delta": 1,
+                        "next_phase": "propuesta",
+                    },
+                    {
+                        "label": "[YAOTL] Yaotl da un paso al frente (requiere aliado de Nivel 6)",
+                        "requires_flag_any": ["yaotl_aliado"],
+                        "response_text": (
+                            "Yaotl, a tu lado, tensa el arco espiritual sin disparar.\n\n"
+                            "YAOTL: \"Me conoce. No desde la muerte. Desde antes.\n"
+                            "Cuando yo cazaba jaguares en los volcanes del sur,\n"
+                            "hace seiscientos años, él ya era viejo.\n"
+                            "Me comió un hermano. Yo le corté la oreja.\"\n\n"
+                            "Itzcuintli se queda muy quieto.\n\n"
+                            "ITZCUINTLI: \"El guerrero de la oreja. Seiscientos años.\n"
+                            "Creí que el Temiminaloyan te tenía.\"\n"
+                            "YAOTL: \"Ya no.\"\n"
+                            "Un silencio que pesa décadas de parte de los dos.\n\n"
+                            "ITZCUINTLI (a ti): \"Tu compañero y yo tenemos deudas viejas.\n"
+                            "Las deudas viejas merecen respeto. Habla.\"\n\n"
+                            "[YAOTL PRESENTADO — Itzcuintli reconoce a Yaotl: apertura diplomática]"
+                        ),
+                        "sets_flag": "yaotl_presento_itzcuintli",
+                        "next_phase": "propuesta",
+                    },
+                ],
+            },
+            # ── Propuesta ─────────────────────────────────────────────────────
+            "propuesta": {
+                "text": (
+                    "ITZCUINTLI: \"Bien. Ya te miré. Ya sé lo que traes.\n"
+                    "Elige: responde mi acertijo, pelea, convénceme,\n"
+                    "o de todos modos te como. Solo el primero te garantiza el paso.\"\n\n"
+                    "¿Qué haces?"
+                ),
+                "options": [
+                    {
+                        "label": "[COMBATE] Preparar las armas — enfrentar al jaguar",
+                        "response_text": (
+                            "Desenvainas Tlachicotl. Alzas el Escudo Ceiba.\n"
+                            "Revisas mentalmente si Tonatiuh está cargado.\n\n"
+                            "ITZCUINTLI (ronroneo que suena a risa):\n"
+                            "\"Ah. Escoges el camino corto. Me gusta el camino corto.\n"
+                            "Se terminan rápido los que lo eligen.\"\n"
+                            "Larga pausa.\n"
+                            "\"Y llevas piel de mi pariente en el escudo. ¿Sabes que esa\n"
+                            "piel fue de un primo mío? Un jaguar joven que los españoles\n"
+                            "mataron hace cincuenta años. El de dos sangres aceptó esa piel\n"
+                            "en su escudo. Tú la heredaste.\"\n"
+                            "Las brasas bajo su pelaje se encienden.\n"
+                            "\"¿Te preguntas si yo te perdono por cargar la piel de mi primo?\"\n\n"
+                            "¿Qué respondes?"
+                        ),
+                        "next_phase": "combate_arma",
+                    },
+                    {
+                        "label": "[DIPLOMACIA] \"No vengo a pelear. Vengo a pasar.\"",
+                        "response_text": (
+                            "ITZCUINTLI (ronroneo bajo, escéptico):\n"
+                            "\"No vienes a pelear. Bien. El de dos sangres tampoco vino a pelear.\n"
+                            "Pero estaba preparado para pelear si hacía falta.\n"
+                            "Tú también, veo. Tienes las armas. Las llevas.\n"
+                            "No me las vas a entregar, ¿verdad?\"\n\n"
+                            "JUGADOR: \"No. Son mías. Pero no las usaré contigo.\"\n\n"
+                            "ITZCUINTLI: \"Palabra honesta. Los que pretenden entregar\n"
+                            "las armas y luego las usan mueren con las armas.\n"
+                            "Tú no vas a morir con las armas, porque admites que las tienes.\"\n\n"
+                            "Bajo las brasas, algo se mueve — no hostilidad. Evaluación."
+                        ),
+                        "next_phase": "diplomacia_declaracion",
+                    },
+                    {
+                        "label": "[CONOCIMIENTO] \"Eres guardián, no cazador. Hay diferencia.\"",
+                        "response_text": (
+                            "ITZCUINTLI se detiene.\n"
+                            "Sus brasas bajo el pelaje se estabilizan — ni más calientes, ni más frías.\n\n"
+                            "ITZCUINTLI: \"Guardián, no cazador. Diego dijo algo parecido.\n"
+                            "Fue el único vivo en seiscientos años que distinguió.\n"
+                            "Ahora tú también distingues.\"\n\n"
+                            "Una pausa larga.\n\n"
+                            "\"Entonces escucha. Tengo un acertijo. Lo tengo desde antes\n"
+                            "de que existieran los reyes que me habrían contestado bien.\n"
+                            "Respóndelo y paso libre. Fállalo y... veamos.\"\n\n"
+                            "ITZCUINTLI:\n"
+                            "\"Soy más fuerte que el acero pero más frágil que el cristal.\n"
+                            "Los reyes me buscan pero los sabios me huyen.\n"
+                            "Los vivos me cargan pero los muertos me han olvidado.\n"
+                            "¿Qué soy?\""
+                        ),
+                        "next_phase": "acertijo_pregunta",
+                    },
+                    {
+                        "label": "[AHUIZOTL] \"El de los ríos bajos te recuerda.\"",
+                        "requires_flag_any": ["favor_ahuizotl"],
+                        "response_text": (
+                            "Itzcuintli se queda muy quieto. Las brasas debajo de su pelaje\n"
+                            "se atenúan un momento — como si hubiera reído por dentro\n"
+                            "y su risa fuera hacer eso, bajar las brasas.\n\n"
+                            "ITZCUINTLI: \"...\"\n\n"
+                            "ITZCUINTLI: \"El de las mil patas acuáticas. El pariente menor.\n"
+                            "Hace mil años me debe una lengua — me la escondió cuando\n"
+                            "unos cazadores me la querían cortar. Yo le debo la vida de esa escena.\"\n\n"
+                            "ITZCUINTLI: \"Dile que ya no. Que saldamos. Que si necesita otra,\n"
+                            "la pida él directamente, no por mensajero.\"\n\n"
+                            "ITZCUINTLI: \"Y tú, vivo que eres el mensajero... pasa.\n"
+                            "No te comeré hoy. Tampoco te jugaré el acertijo.\n"
+                            "El de los ríos bajos pagó por ti.\"\n\n"
+                            "XOCHITL (voz baja): \"Eso es... no lo había visto antes.\n"
+                            "Itzcuintli que deja pasar sin acertijo, sin combate.\n"
+                            "El Ahuízotl pagó caro en dignidad para hacer eso.\"\n\n"
+                            "[DEUDA DEL AHUÍZOTL CERRADA — paso libre, sin medición]"
+                        ),
+                        "sets_flags": ["nivel7_paso_ahuizotl", "nivel9_mictlan_nota_ahuizotl"],
+                        "nah_delta": 1,
+                        "next_phase": None,
+                    },
+                ],
+            },
+            # ── COMBATE ───────────────────────────────────────────────────────
+            "combate_arma": {
+                "text": (
+                    "Itzcuintli baja de la piedra negra. Los hongos a sus patas se apagan\n"
+                    "de miedo. Las brasas bajo su pelaje se encienden al máximo.\n\n"
+                    "¿Con qué abres el combate?"
+                ),
+                "options": [
+                    {
+                        "label": "[TLACHICOTL] La espada de obsidiana y acero — corta carne y espíritu",
+                        "response_text": (
+                            "Cargas con la espada en alto. Itzcuintli no se mueve — te espera.\n"
+                            "Cuando llegas a tres metros, él se mueve, y entiendes que antes\n"
+                            "no se movía porque no quería gastar aliento.\n\n"
+                            "Es más rápido que cualquier cosa que hayas visto.\n"
+                            "Pero Tlachicotl es rápida también — la espada canta cuando la alzas.\n"
+                            "Das el primer tajo. Él te esquiva torciendo el cuello como si no tuviera huesos.\n"
+                            "Das el segundo. Lo rozas en el costado.\n"
+                            "La obsidiana de Tlachicotl muerde el pelaje.\n\n"
+                            "ITZCUINTLI RUGE. No de dolor. De aprobación.\n\n"
+                            "ITZCUINTLI: \"¡El filo es viejo! ¡Me recuerda al filo del otro!\n"
+                            "¡Al de dos sangres no lo dejé pasar así! ¡Él me miró y preguntó!\"\n\n"
+                            "La zarpa contraataca. Pasa a dos dedos de tu cara.\n"
+                            "Un corte pequeño en la mejilla sangra. Una intención, no un golpe.\n"
+                            "Si hubiera querido, habrías perdido la cara."
+                        ),
+                        "sets_flag": "combate_arma_tlachicotl",
+                        "next_phase": "combate_momento",
+                    },
+                    {
+                        "label": "[TONATIUH] El arcabuz de plata y copal — un tiro, luego recarga lenta",
+                        "response_text": (
+                            "Levantas el arcabuz. Apuntas al pecho — al hueco entre las costillas\n"
+                            "donde se asoman las brasas. Aprietas.\n\n"
+                            "El disparo de Tonatiuh truena en la selva como si hubieras\n"
+                            "roto el techo del mundo. La bala — plata con ceniza de copal —\n"
+                            "se entierra en el pelaje del jaguar. Humo blanco. Olor a iglesia.\n\n"
+                            "ITZCUINTLI retrocede un solo paso.\n\n"
+                            "ITZCUINTLI: \"La munición mezclada. El de dos sangres usaba eso.\n"
+                            "Me rozó con una hace cincuenta años — no a mí, al nahual.\n"
+                            "Yo estaba mirando. Yo recuerdo.\"\n\n"
+                            "La herida cierra sola en segundos. Las brasas queman la bala desde adentro.\n"
+                            "La escupen al suelo humeante.\n\n"
+                            "ITZCUINTLI: \"No bastó. Recarga. Voy a contar. Lento. Para que alcances.\"\n\n"
+                            "Cuenta: uno... dos... tres... Recargas con manos torpes.\n"
+                            "Cuatro... cinco... Terminas. Seis. Itzcuintli salta."
+                        ),
+                        "sets_flag": "combate_arma_tonatiuh",
+                        "next_phase": "combate_momento",
+                    },
+                    {
+                        "label": "[ESCUDO + ESPADA] Defensa primero, filo después — postura de tlamatini-guerrero",
+                        "response_text": (
+                            "Alzas el Escudo Ceiba al frente. Tlachicotl al costado, baja.\n"
+                            "Avanzas como se avanza en una iglesia vacía: con respeto y con miedo.\n"
+                            "Itzcuintli nota el cambio de postura. No ataca de inmediato.\n\n"
+                            "ITZCUINTLI: \"Postura de dos caras. Defensa primero, filo después.\n"
+                            "Eso lo enseñaban los tlamatini-guerreros antes. Hace mucho.\n"
+                            "Los vivos olvidaron esa postura. Tú la recuerdas.\"\n\n"
+                            "Itzcuintli salta al fin — no directo. Cae al lado, rodando.\n"
+                            "Prueba tu flanco. Giras con el escudo. La zarpa choca contra la ceiba.\n"
+                            "La madera gime — no se rompe. Tu brazo del escudo se entumece hasta el hombro.\n\n"
+                            "Respondes con Tlachicotl desde abajo, a la barriga.\n"
+                            "La punta roza. La barriga del jaguar es calor puro.\n"
+                            "Tu muñeca se quema un momento al contacto."
+                        ),
+                        "sets_flag": "combate_arma_escudo",
+                        "next_phase": "combate_momento",
+                    },
+                    {
+                        "label": "[ARCABUZ + ESCUDO] Disparo desde defensa — postura española",
+                        "response_text": (
+                            "Levantas Tonatiuh con la mano derecha. El escudo, alzado, cubre medio cuerpo.\n"
+                            "Postura de arcabucero formado — la que los tercios enseñaban.\n\n"
+                            "ITZCUINTLI (ronroneo): \"Postura de conquistador. Las he visto muchas.\"\n\n"
+                            "Disparas. Itzcuintli se lanza al suelo como un gato se esconde bajo un mueble\n"
+                            "— la bala le pasa por encima del lomo, raspándole los pelos.\n"
+                            "Olor a pelo chamuscado.\n\n"
+                            "El jaguar se levanta con un rugido de humillación y de satisfacción al mismo tiempo.\n\n"
+                            "ITZCUINTLI: \"¡MEJOR, MEJOR! ¡HACE MIL AÑOS QUE NO ME AGACHO!\"\n\n"
+                            "Ataca. No puedes recargar con una mano.\n"
+                            "Tienes que elegir: soltar el escudo para recargar, o pelear cuerpo a cuerpo."
+                        ),
+                        "sets_flag": "combate_arma_arcabuz_escudo",
+                        "next_phase": "combate_momento",
+                    },
+                ],
+            },
+            "combate_momento": {
+                "text": (
+                    "Itzcuintli carga. No es embestida — es tormenta.\n"
+                    "Ocho garras. Dos colmillos. Un lomo del tamaño de una casa.\n\n"
+                    "¿Cómo respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[ESP] Esquivar lateral — rodar hacia el lado",
+                        "response_text": (
+                            "Ruedas. Los hongos estallan bajo tu cuerpo, dejando un surco de luz.\n"
+                            "La zarpa pasa donde estaba tu cabeza. Te pones de pie con Tlachicotl en alto.\n"
+                            "Itzcuintli ya está girando para volver a atacar. Has ganado dos segundos.\n\n"
+                            "XOCHITL: \"Bien. Pero no puedes seguir esquivando eternamente.\"\n\n"
+                            "Tienes esos dos segundos. El siguiente golpe te alcanza de costado.\n"
+                            "No profundo — pero tres cortes largos en el brazo. Sangras."
+                        ),
+                        "sets_flag": "combate_esquiva_lateral",
+                        "esp_delta": 1,
+                        "next_phase": "combate_derrota",
+                    },
+                    {
+                        "label": "[NAH] Bloquear con el Escudo Ceiba — absorber el golpe",
+                        "response_text": (
+                            "El Escudo Ceiba recibe la zarpa completa.\n"
+                            "El golpe es monumental. La madera cruje — no se rompe,\n"
+                            "pero cruje como si el bosque entero se quejara.\n"
+                            "Tu brazo se entumece. Algo en el hombro chasquea — no roto, pero cercano.\n\n"
+                            "ITZCUINTLI: \"El escudo de Diego. Reconocería ese escudo en cualquier nivel.\"\n\n"
+                            "El jaguar retrocede un paso. Te mira con algo parecido al respeto.\n"
+                            "Pero aprovecha que tu brazo está fuera de combate para atacar de nuevo."
+                        ),
+                        "sets_flag": "combate_bloqueo_escudo",
+                        "next_phase": "combate_derrota",
+                    },
+                    {
+                        "label": "[DUAL] Saltar hacia arriba — agarrar una rama de los árboles negros",
+                        "response_text": (
+                            "Saltas. Agarras una rama de las columnas negras. Subes a pulso.\n"
+                            "Itzcuintli pasa debajo sin encontrar blanco.\n\n"
+                            "ITZCUINTLI: \"¡Arriba! ¡Muy vivo eres para estar tan cerca de estar muerto!\"\n\n"
+                            "Desde la rama, tienes tres segundos antes de que el jaguar salte.\n"
+                            "Arrojas Tlachicotl desde arriba — la espada cae sobre el hombro izquierdo del jaguar.\n"
+                            "Se clava. No profundo, pero entra.\n\n"
+                            "Itzcuintli RUGE. Con Tlachicotl clavada en el hombro se ve enorme desde arriba.\n"
+                            "Y entonces salta hacia ti."
+                        ),
+                        "sets_flag": "combate_ventaja_vertical",
+                        "esp_delta": 1, "nah_delta": 1,
+                        "next_phase": "combate_derrota",
+                    },
+                    {
+                        "label": "[DESESPERADO] Cargar hacia él — espada en punta como lanza",
+                        "response_text": (
+                            "Cargas. Tlachicotl al frente, punta primero.\n"
+                            "Itzcuintli no se lo espera — los vivos no cargan contra él.\n"
+                            "La punta de Tlachicotl se hunde en el hombro del jaguar.\n"
+                            "La obsidiana entra cinco dedos — corta pelaje, cuero, músculo, hueso, espíritu.\n\n"
+                            "Itzcuintli RUGE. De verdad esta vez. No aprobatorio. Dolor.\n\n"
+                            "Pero tu posición es fatal.\n"
+                            "Estás a medio metro de sus colmillos. Su cabeza gira. Su mandíbula se abre.\n\n"
+                            "Elegiste el ataque más desesperado.\n"
+                            "Tu espada está clavada en él.\n"
+                            "¿Qué haces?"
+                        ),
+                        "sets_flag": "combate_carga_frontal",
+                        "next_phase": "combate_climax",
+                    },
+                    {
+                        "label": "[HUIR] Girar y correr — darle la espalda al jaguar",
+                        "response_text": (
+                            "Giras. Corres. Tlachicotl en la mano, el escudo al hombro.\n"
+                            "No miras atrás. Los hongos estallan bajo tus pies\n"
+                            "dejando una ruta de luz que Itzcuintli podría seguir con los ojos cerrados.\n\n"
+                            "Dos segundos. Tres. Cuatro. Esperas la zarpa en la nuca.\n\n"
+                            "La zarpa no llega.\n\n"
+                            "ITZCUINTLI (a tus espaldas, voz de cueva):\n"
+                            "\"Corre, carne. Corre bien. Yo no corro a los que huyen.\n"
+                            "Les perdono la espalda. Pero recuerda: cuando te duermas en los\n"
+                            "niveles que vienen, yo voy a estar en tus sueños. Te voy a decir,\n"
+                            "cada noche, que podrías haber peleado un poco más.\n"
+                            "Y tú te vas a preguntar si es verdad. Corre.\"\n\n"
+                            "XOCHITL (cuando llegas al borde del claro): \"Bueno. Estás vivo.\"\n"
+                            "JUGADOR (sin aliento): \"Estoy vivo.\"\n"
+                            "XOCHITL: \"Diego no hubiera huido. Pero Diego está del otro lado.\n"
+                            "Tú sigues aquí. Los vivos y los muertos miden distinto.\"\n\n"
+                            "[HUIDA — Itzcuintli te perseguirá en sueños en Nivel 8]"
+                        ),
+                        "sets_flags": ["nivel7_huida", "nivel9_mictlan_nota_huida", "itzcuintli_sueños"],
+                        "esp_delta": -1, "nah_delta": -1,
+                        "next_phase": None,
+                    },
+                ],
+            },
+            "combate_climax": {
+                "text": (
+                    "Tlachicotl está clavada en el hombro de Itzcuintli.\n"
+                    "Sus colmillos están a diez centímetros de tu cara.\n"
+                    "El jaguar herido y tú están quietos, respirando pesado.\n\n"
+                    "¿Qué haces con tu otro brazo?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] Soltar la espada — retirarte antes de que muerda",
+                        "response_text": (
+                            "Sueltas a Tlachicotl. Ruedas hacia atrás.\n"
+                            "La espada queda clavada en el jaguar — la espada que perteneció a Diego,\n"
+                            "que bendijeron un sacerdote y un tlamatini, que cortó al Nahual de Obsidiana.\n"
+                            "Clavada en un hombro que no es tuyo.\n\n"
+                            "ITZCUINTLI te mira. Baja la cabeza. Con la boca —\n"
+                            "despacio, con una delicadeza absurda para un ser de su tamaño —\n"
+                            "agarra el mango de Tlachicotl y la saca del hombro.\n"
+                            "La deja caer sobre los hongos, frente a ti.\n\n"
+                            "ITZCUINTLI: \"Tuya. No quiero la espada del de dos sangres.\n"
+                            "Pero tampoco olvidaré que la soltaste cuando importaba.\"\n\n"
+                            "[TLACHICOTL RECUPERADA — Itzcuintli nota cobardía táctica]"
+                        ),
+                        "sets_flags": ["combate_suelto_espada", "nivel9_mictlan_nota_cobardía"],
+                        "next_phase": "combate_derrota",
+                    },
+                    {
+                        "label": "[2] Girar la hoja dentro de la herida — más daño, más riesgo",
+                        "response_text": (
+                            "Giras la hoja dentro. Itzcuintli aúlla.\n"
+                            "Pero te muerde — el colmillo izquierdo te entra por el hombro derecho.\n"
+                            "Profundo. Sientes crujir algo.\n\n"
+                            "Por unos segundos ambos están unidos —\n"
+                            "su colmillo en tu hombro, tu espada en el suyo.\n"
+                            "Respirando pesado. Sangre revuelta.\n\n"
+                            "Entonces el jaguar se separa. Tú caes hacia atrás.\n"
+                            "Él queda de pie, con Tlachicotl todavía en el hombro, humeante.\n\n"
+                            "ITZCUINTLI (entre respiraciones):\n"
+                            "\"Eso sí lo sentí. No me habían herido así desde el cazador\n"
+                            "que me cortó la oreja. Seiscientos años.\"\n"
+                            "Baja la cabeza. Lento. Tlachicotl cae de su hombro.\n\n"
+                            "[ITZCUINTLI GRAVEMENTE HERIDO — primer herido en 600 años]"
+                        ),
+                        "sets_flags": ["combate_giro_hoja", "itzcuintli_herido", "nivel9_mictlan_nota_combate"],
+                        "esp_delta": 2,
+                        "next_phase": "combate_victoria",
+                    },
+                    {
+                        "label": "[3] Sacar el cuchillo con la otra mano — clavarle el ojo lateral",
+                        "response_text": (
+                            "Sacas el cuchillo pequeño con la zurda.\n"
+                            "Lo clavas en el ojo que te queda frente — no del todo,\n"
+                            "solo lo alcanzas lateralmente. Pero alcanzas.\n\n"
+                            "Itzcuintli retrocede. Un ojo herido. Un hombro con Tlachicotl adentro.\n"
+                            "Sangra por dos lugares. Su pelaje que arde por dentro humea.\n\n"
+                            "ITZCUINTLI: \"...\"\n\n"
+                            "ITZCUINTLI: \"Felicidades, carne-persistente.\n"
+                            "Acabas de hacer historia en el Mictlán.\"\n\n"
+                            "[ITZCUINTLI GRAVEMENTE HERIDO — historia en el Mictlán]"
+                        ),
+                        "sets_flags": ["combate_cuchillo_ojo", "itzcuintli_herido", "nivel9_mictlan_nota_combate"],
+                        "esp_delta": 2, "nah_delta": 1,
+                        "next_phase": "combate_victoria",
+                    },
+                ],
+            },
+            "combate_victoria": {
+                "text": (
+                    "Itzcuintli está herido. Tres pasos atrás. Sangra.\n"
+                    "Las brasas bajo su pelaje se atenúan — no se apagan, pero se atenúan.\n\n"
+                    "ITZCUINTLI: \"Eso sí lo sentí.\"\n\n"
+                    "Tlachicotl está al suelo entre los dos, humeante.\n"
+                    "¿Qué haces?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] Recuperar Tlachicotl",
+                        "response_text": (
+                            "ITZCUINTLI: \"Ven. Ven a sacarla. No te voy a atacar.\n"
+                            "Te la ganaste con obsidiana dentro de mí.\"\n\n"
+                            "Te acercas con cuidado. Pones la mano en la empuñadura. Jalas.\n"
+                            "Tlachicotl sale con un ruido de ventosa —\n"
+                            "arrastrando pelaje, sangre y un olor a volcán extinto.\n"
+                            "La hoja ahora tiene una línea roja a lo largo del acero que antes no tenía.\n"
+                            "Se ha alimentado del dios-jaguar. Ha evolucionado.\n\n"
+                            "XOCHITL (voz baja): \"Diego nunca llegó a esto.\n"
+                            "Tlachicotl ahora lleva la marca del guardián.\"\n\n"
+                            "ITZCUINTLI: \"Ve al Apochcaloca. Cura tus heridas en la niebla.\n"
+                            "Y dile a Mictlantecuhtli, de mi parte, que hoy aprendí algo nuevo.\n"
+                            "Él lo respetará.\"\n\n"
+                            "[TLACHICOTL EVOLUCIONADA — línea de fuego]\n"
+                            "[ITZCUINTLI HERIDO POR UN MORTAL — primera vez en 600 años]"
+                        ),
+                        "sets_flags": ["tlachicotl_evolucionada", "nivel9_mictlan_nota_combate",
+                                       "itzcuintli_mensaje_para_mictlan"],
+                        "esp_delta": 1,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[2] Dejar la espada — \"Es tuya. En pago.\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"...\"\n\n"
+                            "ITZCUINTLI: \"La rechazo. Es tuya. Ven. Sácala.\n"
+                            "No voy a cargar con la espada del de dos sangres el resto de la eternidad.\"\n\n"
+                            "Caminas. La recuperas.\n\n"
+                            "ITZCUINTLI: \"Generoso con algo que ya no me importa.\n"
+                            "Pero la intención vale. Dile a Mictlantecuhtli que viniste con generosidad.\n"
+                            "Él lo considera.\"\n\n"
+                            "[TLACHICOTL RECUPERADA + ITZCUINTLI RESPETA GENEROSIDAD]"
+                        ),
+                        "sets_flags": ["tlachicotl_evolucionada", "nivel9_mictlan_nota_combate",
+                                       "nivel9_mictlan_nota_generosidad"],
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[3] \"Perdóname la vida.\"",
+                        "response_text": (
+                            "Larga pausa.\n\n"
+                            "ITZCUINTLI: \"Pedir perdón de la vida al que ya no puede quitártela\n"
+                            "es redundante, carne. Pero lo respeto. Eres joven,\n"
+                            "para los estándares del Mictlán.\"\n\n"
+                            "\"Pasa. Lleva tu espada. Llévate algo más:\n"
+                            "la oreja que me falta nunca la recuperé.\n"
+                            "La perdiste tú también, ¿no? Algo. Alguien.\"\n\n"
+                            "NARRADOR: Itzcuintli te mira y ves en sus ojos algo de ti\n"
+                            "que tú no sabes que tienes. Una pérdida sin nombre.\n\n"
+                            "ITZCUINTLI: \"El Mictlantecuhtli va a preguntarte sobre eso.\n"
+                            "Prepara una respuesta honesta.\"\n\n"
+                            "[MARCA DE ITZCUINTLI — visión profética; Nivel 9 reconoce]"
+                        ),
+                        "sets_flags": ["tlachicotl_evolucionada", "nivel9_mictlan_nota_combate",
+                                       "marca_itzcuintli", "nivel9_mictlan_pregunta_perdida"],
+                        "nah_delta": 1,
+                        "next_phase": None,
+                    },
+                ],
+            },
+            "combate_derrota": {
+                "text": (
+                    "Estás de rodillas. Un ojo inflamado.\n"
+                    "Sangre por dos heridas. Itzcuintli sobre ti, los colmillos a diez centímetros del cuello.\n\n"
+                    "Esperas el golpe.\n\n"
+                    "El golpe no viene.\n\n"
+                    "ITZCUINTLI: \"Peleaste bien, carne. Mal, pero bien.\n"
+                    "Mal porque no me podías ganar. Bien porque no dejaste de intentar.\n"
+                    "Eso en mi reino vale más que el acierto.\"\n\n"
+                    "\"Los cobardes no llegan a esta piedra. Tú llegaste. Peleaste. Perdiste.\n"
+                    "Los tres verbos en orden, como deben ser.\"\n\n"
+                    "¿Qué dices?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Mátame y termina.\"",
+                        "response_text": (
+                            "ITZCUINTLI (ronroneo):\n"
+                            "\"Prisa. No. El Mictlán no tiene prisa. Aprende eso antes de morir, carne.\n"
+                            "Los que mueren con prisa resucitan con prisa también,\n"
+                            "y la prisa los hace volver a morir.\n"
+                            "Sin prisa se muere bien, y quedarse así es descansar.\"\n\n"
+                            "\"Pasa. No pido más.\"\n\n"
+                            "XOCHITL: \"Diego no hubiera dicho eso. Tú lo dijiste.\n"
+                            "No sé si eso es valentía o agotamiento. Puede ser las dos.\"\n\n"
+                            "[DERROTA HONORABLE — Itzcuintli perdona la vida]"
+                        ),
+                        "sets_flags": ["nivel7_derrota_honorable", "nivel9_mictlan_nota_combate"],
+                        "esp_delta": 1,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[2] \"Déjame pasar.\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"Eso es lo que iba a hacer.\n"
+                            "Pero me gusta que lo pidas.\n"
+                            "Los vivos dignos piden. Los indignos exigen. Pasa.\"\n\n"
+                            "XOCHITL (mientras te levantas):\n"
+                            "\"Diego nunca peleó con él. Pero hablaba de Itzcuintli con respeto.\n"
+                            "Decía: 'el viejo jaguar vio nacer el Mictlán'.\n"
+                            "Tú lo enfrentaste con una espada.\n"
+                            "No sé si eso es valiente o estúpido. Probablemente las dos cosas.\"\n\n"
+                            "[DERROTA HONORABLE — paso concedido]"
+                        ),
+                        "sets_flags": ["nivel7_derrota_honorable", "nivel9_mictlan_nota_combate"],
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[3] \"¿Por qué no me matas?\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"Pregunta buena. La respuesta:\n"
+                            "porque llevo mil años comiendo, y me aburrí.\n"
+                            "Porque el de dos sangres me hizo una pregunta parecida\n"
+                            "y me hizo pensar tres días.\n"
+                            "Porque a veces es más interesante dejar vivo que matar.\n"
+                            "Porque mi oreja cortada me recuerda que yo también fui\n"
+                            "perdonado una vez.\"\n\n"
+                            "\"Pasa.\"\n\n"
+                            "XOCHITL: \"Nadie le había preguntado eso antes. Ni Diego.\"\n"
+                            "JUGADOR: \"Diego preguntó el acertijo. Yo pregunté la razón. Son diferentes.\"\n"
+                            "XOCHITL: \"Sí. Lo son.\"\n\n"
+                            "[DERROTA HONORABLE — Itzcuintli reflexiona, pasa con respeto mutuo]"
+                        ),
+                        "sets_flags": ["nivel7_derrota_honorable", "nivel9_mictlan_nota_combate",
+                                       "itzcuintli_reflexion"],
+                        "nah_delta": 2,
+                        "next_phase": None,
+                    },
+                ],
+            },
+            # ── DIPLOMACIA ────────────────────────────────────────────────────
+            "diplomacia_declaracion": {
+                "text": (
+                    "ITZCUINTLI: \"Vas a pasar. Pero no me vas a convencer con palabras.\n"
+                    "Con palabras convenció el de dos sangres al Mictlantecuhtli, no a mí.\n"
+                    "A mí se me convence con hechos.\"\n\n"
+                    "\"Mira a tu alrededor.\"\n\n"
+                    "NARRADOR: Los hongos bajo tus pies brillan intermitentes.\n"
+                    "Hay un círculo, a unos veinte metros, donde los hongos NO brillan.\n"
+                    "Un círculo negro en un mar de luz. Perfecto. Obviamente no natural.\n\n"
+                    "ITZCUINTLI:\n"
+                    "\"Adentro de ese círculo vive Chantico. La pequeña. La gata del hogar\n"
+                    "que fue devorada por una tormenta hace trescientos años y quedó atrapada aquí.\n"
+                    "Ella no hace daño a nadie. Pero duerme en ese círculo,\n"
+                    "y su sueño mancha la luz.\"\n\n"
+                    "\"Entra al círculo. Despiértala con cuidado. Dile que Itzcuintli\n"
+                    "le pide que salga a respirar.\n"
+                    "Si lo haces sin alterarla, te dejaré pasar.\n"
+                    "Si la asustas, ella me pedirá que te mate, y yo le haré caso.\"\n\n"
+                    "¿Qué preguntas antes de entrar?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"¿Por qué no lo haces tú?\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"No puedo. Soy demasiado grande para el círculo.\n"
+                            "Mi sombra sola la aterraría. Por eso necesito alguien pequeño. Vivo. Como tú.\"\n\n"
+                            "XOCHITL (en voz muy baja): \"Itzcuintli pidiendo ayuda.\n"
+                            "Eso tampoco lo había visto.\""
+                        ),
+                        "next_phase": "chantico_entrada",
+                    },
+                    {
+                        "label": "[2] \"Lo haré.\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"Bien. Ve. Despacio. Sin armas en la mano.\n"
+                            "La espada al cinto. El arcabuz a la espalda. El escudo colgado.\n"
+                            "Camina como si visitaras a tu abuela enferma.\"\n\n"
+                            "XOCHITL: \"Camina como si visitaras a tu abuela enferma.\n"
+                            "¿Los jaguares del Mictlán tienen abuelas?\"\n"
+                            "JUGADOR: \"Supongo que sí.\""
+                        ),
+                        "next_phase": "chantico_entrada",
+                    },
+                    {
+                        "label": "[3] \"¿Y si ella no confía en mí?\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"No confiará. Pero los que no confían a veces escuchan.\n"
+                            "Tu trabajo es que ella escuche. No que confíe.\"\n\n"
+                            "Larga pausa.\n\n"
+                            "ITZCUINTLI (más suave): \"Lleva trescientos años ahí.\n"
+                            "Sin que nadie le hable. Sin que nadie la vea.\n"
+                            "Lo que necesita no es confianza. Es presencia.\"\n\n"
+                            "XOCHITL: \"Treinta años aquí. Sin que nadie me viera.\n"
+                            "Entiendo lo que dice.\""
+                        ),
+                        "sets_flag": "nivel7_chantico_comprendes",
+                        "nah_delta": 1,
+                        "next_phase": "chantico_entrada",
+                    },
+                ],
+            },
+            "chantico_entrada": {
+                "text": (
+                    "Bajas las armas. Caminas al círculo. Veinte pasos. Diez. Cinco. Entras.\n\n"
+                    "NARRADOR: Adentro, la oscuridad es total.\n"
+                    "Los hongos del exterior siguen brillando, pero su luz no penetra —\n"
+                    "se queda en el borde, como si tuviera miedo.\n"
+                    "Tus ojos tardan en adaptarse. Hueles a ceniza fría. A hogar apagado hace mucho.\n\n"
+                    "Y ves dos ojos. Pequeños. Del tamaño de monedas. A tu altura. En el suelo.\n\n"
+                    "CHANTICO (voz como gato doméstico si los gatos hablaran —\n"
+                    "pequeña, pero con algo muy viejo debajo):\n"
+                    "\"¿Quién.\"\n\n"
+                    "No es pregunta. Es declaración. 'Quién.'"
+                ),
+                "options": [
+                    {
+                        "label": "[1] Agacharte a su altura y extender la mano — sin hablar",
+                        "response_text": (
+                            "No dices nada.\n"
+                            "Solo te agachas. Extiendes la mano, palma arriba, hacia los dos ojos.\n\n"
+                            "Silencio.\n\n"
+                            "Los ojos te estudian. Luego se acercan, despacio.\n"
+                            "Un hocico pequeño, frío, te olisquea los dedos.\n\n"
+                            "CHANTICO: \"Los que no hablan respetan.\n"
+                            "Me levanto porque no me obligas con palabra. Vamos.\"\n\n"
+                            "La gata sale contigo. Sin necesidad de explicaciones.\n"
+                            "Su pelaje es del color de la ceniza acumulada. Muy pequeña comparada con Itzcuintli.\n"
+                            "Pero se ve vieja de una manera que el tamaño no alcanza a medir.\n\n"
+                            "[MODO MÁXIMO — respeto sin palabras]"
+                        ),
+                        "sets_flag": "chantico_silencio",
+                        "nah_delta": 2,
+                        "next_phase": "diplomacia_exito",
+                    },
+                    {
+                        "label": "[2] \"Soy un vivo. Vengo de parte de Itzcuintli.\"",
+                        "response_text": (
+                            "CHANTICO (los ojos se estrechan):\n"
+                            "\"Vivo. Itzcuintli. Dos palabras que me molestan. Vete.\"\n\n"
+                            "NARRADOR: Sientes que si te quedas más, la gata va a llorar.\n"
+                            "Y si llora, Itzcuintli lo sabrá.\n"
+                            "Sales del círculo despacio.\n\n"
+                            "ITZCUINTLI (cuando llegas): \"La asustaste. Entra otra vez.\n"
+                            "Esta vez, piensa antes de hablar.\"\n\n"
+                            "[PRUEBA FALLIDA — segunda oportunidad]"
+                        ),
+                        "next_phase": "chantico_segunda",
+                    },
+                ],
+            },
+            "chantico_segunda": {
+                "text": (
+                    "Entras otra vez. Los dos ojos te esperan exactamente donde los dejaste.\n"
+                    "No se fueron. Solo observaban.\n\n"
+                    "CHANTICO: \"Volviste.\"\n\n"
+                    "¿Qué haces ahora?"
+                ),
+                "options": [
+                    {
+                        "label": "[NAH] \"Itzcuintli te pide que salgas a respirar.\"",
+                        "response_text": (
+                            "CHANTICO: \"Respirar. Llevo... llevo tiempo sin.\"\n"
+                            "Pausa.\n"
+                            "\"¿Cuánto?\"\n\n"
+                            "JUGADOR: \"Trescientos años, según Itzcuintli.\"\n\n"
+                            "CHANTICO: \"Trescientos. Ese número me duele.\n"
+                            "Pero gracias por la verdad. Me levanto.\"\n\n"
+                            "La gata se levanta. Pequeña, vieja, cubierta de ceniza.\n"
+                            "Te sigue fuera del círculo.\n\n"
+                            "CHANTICO (fuera, oliendo el aire): \"Huele a selva.\n"
+                            "A hongos. A calor lejano. No estaba tan mal lo que olía por fuera.\"\n\n"
+                            "[PRUEBA SUPERADA — modo tierno]"
+                        ),
+                        "sets_flag": "chantico_verdad",
+                        "nah_delta": 1,
+                        "next_phase": "diplomacia_exito",
+                    },
+                    {
+                        "label": "[APRESURARSE] Intentar agarrarla — ya perdiste demasiado tiempo",
+                        "response_text": (
+                            "Extiendes los brazos para agarrar a Chantico.\n\n"
+                            "La gata maúlla — un sonido que es puro terror.\n\n"
+                            "Afuera, Itzcuintli RUGE.\n\n"
+                            "Cuando sales del círculo, el jaguar está de pie y sus brasas\n"
+                            "están al máximo — más brillantes que cuando entraste al claro.\n\n"
+                            "ITZCUINTLI: \"La asustaste. Dos veces. Ella llora.\n"
+                            "Y cuando llora me pide cosas, y yo no puedo decirle que no.\n"
+                            "Pelea, entonces. Sin rencor. Una lástima.\"\n\n"
+                            "[DIPLOMACIA FALLIDA — combate forzado con Itzcuintli enojado]"
+                        ),
+                        "sets_flag": "chantico_asustada",
+                        "esp_delta": -1,
+                        "next_phase": "combate_forzado",
+                    },
+                ],
+            },
+            "diplomacia_exito": {
+                "text": (
+                    "Chantico sale del círculo contigo.\n\n"
+                    "ITZCUINTLI (desde la piedra):\n"
+                    "\"Hermana menor. Te llevé cuidado.\"\n\n"
+                    "CHANTICO (enojada, pero tierna):\n"
+                    "\"Mmph. Tardaste.\"\n\n"
+                    "NARRADOR: Itzcuintli ronronea. Chantico ronronea.\n"
+                    "Por un momento la selva huele a hogar encendido.\n\n"
+                    "ITZCUINTLI: \"Pasa, carne. Con mi bendición.\n"
+                    "Y si alguna vez vuelves — y los héroes siempre vuelven —\n"
+                    "Chantico se acordará de ti.\"\n\n"
+                    "CHANTICO (pequeña junto a Itzcuintli):\n"
+                    "\"Me acuerdo de pocas cosas. Me acordaré de ti.\"\n\n"
+                    "ITZCUINTLI: \"Llévate algo.\"\n\n"
+                    "NARRADOR: Itzcuintli baja la cabeza. Una de sus rosetas —\n"
+                    "las que brillan por dentro — se apaga al desprenderse.\n"
+                    "Cae sobre los hongos como una moneda. La levantas. Es tibia.\n"
+                    "Late levemente, como si tuviera pulso propio.\n\n"
+                    "ITZCUINTLI: \"Úsala para encender fuego cuando todo lo demás falle.\n"
+                    "Funciona una sola vez. Úsala bien.\"\n\n"
+                    "¿Qué respondes?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] \"Gracias. Por Chantico también.\"",
+                        "response_text": (
+                            "CHANTICO (ronroneo pequeño): \"Yo no necesitaba que me sacaran.\n"
+                            "Pero... sí quería que alguien viniera.\"\n\n"
+                            "ITZCUINTLI: \"Eso es lo más honesto que ha dicho en trescientos años.\"\n\n"
+                            "XOCHITL (mientras caminas al borde del claro):\n"
+                            "\"Itzcuintli. No sé si lo he visto tratar a alguien así. Ni a Diego.\n"
+                            "Diplomacia con Itzcuintli — eso es nuevo.\n"
+                            "Nadie lo había hecho antes, ni con Chantico.\n"
+                            "Acabas de descubrir algo de este nivel que llevaba siglos guardado.\"\n\n"
+                            "[DIPLOMACIA COMPLETA — Roseta + Chantico en memoria]"
+                        ),
+                        "sets_flags": ["nivel7_diplomacia", "nivel9_mictlan_nota_diplomacia",
+                                       "chantico_en_memoria", "itzcuintli_bendicion"],
+                        "nah_delta": 2,
+                        "next_phase": None,
+                        "grants_items": ["roseta_itzcuintli"],
+                    },
+                    {
+                        "label": "[2] \"Usaré la roseta bien. Lo prometo.\"",
+                        "response_text": (
+                            "ITZCUINTLI: \"Las promesas al Mictlán se cumplen.\n"
+                            "No porque yo lo vigile. Sino porque este lugar recuerda.\"\n\n"
+                            "XOCHITL: \"Eso también es nuevo. Itzcuintli explica sus advertencias.\n"
+                            "Normalmente solo devora.\"\n\n"
+                            "Caminas hacia el borde del claro. Los hongos\n"
+                            "brillan más suaves debajo de tus pies — como si el lugar\n"
+                            "te agradeciera algo.\n\n"
+                            "[DIPLOMACIA COMPLETA — Roseta obtenida, Mictlán notará]"
+                        ),
+                        "sets_flags": ["nivel7_diplomacia", "nivel9_mictlan_nota_diplomacia",
+                                       "itzcuintli_bendicion"],
+                        "nah_delta": 1,
+                        "next_phase": None,
+                        "grants_items": ["roseta_itzcuintli"],
+                    },
+                ],
+            },
+            # ── ACERTIJO ──────────────────────────────────────────────────────
+            "acertijo_pregunta": {
+                "text": (
+                    "ITZCUINTLI:\n"
+                    "\"Soy más fuerte que el acero pero más frágil que el cristal.\n"
+                    "Los reyes me buscan pero los sabios me huyen.\n"
+                    "Los vivos me cargan pero los muertos me han olvidado.\n"
+                    "¿Qué soy?\""
+                ),
+                "options": [
+                    {
+                        "label": "[1] El orgullo",
+                        "response_text": (
+                            "ITZCUINTLI se queda quieto un momento largo.\n\n"
+                            "ITZCUINTLI: \"Correcto, carne-lista. El orgullo.\n"
+                            "Diego también lo sabía. Él tenía mucho, ese.\n"
+                            "Pero aprendió a domarlo. O intentó.\"\n\n"
+                            "Las brasas bajo su pelaje se enfrían — no apagan, enfrían.\n"
+                            "Como un brasero que ya no necesita más leña.\n\n"
+                            "ITZCUINTLI: \"Ve. No te comeré hoy.\"\n\n"
+                            "XOCHITL: \"Diego tardó menos. Pero tú también lo supiste.\n"
+                            "El orgullo. Que ambos lo tengan, ¿no crees?\"\n\n"
+                            "[ACERTIJO CORRECTO A LA PRIMERA — paso libre]"
+                        ),
+                        "sets_flags": ["nivel7_acertijo_correcto", "nivel9_mictlan_nota_acertijo"],
+                        "nah_delta": 2,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[2] El poder",
+                        "response_text": (
+                            "ITZCUINTLI (ronroneo tibio):\n"
+                            "\"Cerca. Muy cerca. Pero el poder es efecto, no causa.\n"
+                            "Los poderosos son poderosos porque algo los impulsa por dentro.\n"
+                            "Ese algo es lo que pregunto. Piensa otra vez.\"\n\n"
+                            "ITZCUINTLI: \"Te doy una segunda oportunidad.\n"
+                            "El de dos sangres acertó a la primera.\n"
+                            "Tú vas segunda. Que sea buena.\"\n\n"
+                            "[SEGUNDA OPORTUNIDAD — respuesta incorrecta]"
+                        ),
+                        "sets_flag": "acertijo_intento_poder",
+                        "next_phase": "acertijo_segunda",
+                    },
+                    {
+                        "label": "[3] La memoria",
+                        "response_text": (
+                            "ITZCUINTLI (gruñido):\n"
+                            "\"Equivocado. Los muertos SÍ recuerdan.\n"
+                            "Nosotros somos memoria. Los vivos nos olvidan a nosotros,\n"
+                            "no al revés. Si la respuesta fuera memoria, el acertijo sería\n"
+                            "al contrario: 'los muertos me cargan pero los vivos me han olvidado'.\n"
+                            "Piensa mejor.\"\n\n"
+                            "ITZCUINTLI: \"Segunda oportunidad.\n"
+                            "No la uses para decir otra cosa que me insulte.\"\n\n"
+                            "[SEGUNDA OPORTUNIDAD — respuesta incorrecta]"
+                        ),
+                        "sets_flag": "acertijo_intento_memoria",
+                        "next_phase": "acertijo_segunda",
+                    },
+                    {
+                        "label": "[4] El miedo",
+                        "response_text": (
+                            "ITZCUINTLI (carcajada grave, como derrumbe lejano):\n"
+                            "\"¡El miedo! ¡El miedo es útil, carne!\n"
+                            "Los reyes no buscan el miedo — lo tienen de sobra.\n"
+                            "Los sabios no huyen del miedo — lo respetan.\n"
+                            "Lo que pregunto no es útil. Es un lujo.\n"
+                            "El miedo es herramienta. Mala respuesta.\"\n\n"
+                            "ITZCUINTLI: \"Segunda oportunidad. Última.\n"
+                            "Después, viene el combate.\"\n\n"
+                            "[SEGUNDA OPORTUNIDAD — respuesta incorrecta]"
+                        ),
+                        "sets_flag": "acertijo_intento_miedo",
+                        "next_phase": "acertijo_segunda",
+                    },
+                ],
+            },
+            "acertijo_segunda": {
+                "text": (
+                    "Una segunda oportunidad.\n"
+                    "Itzcuintli espera. El acertijo sigue en el aire.\n\n"
+                    "\"Soy más fuerte que el acero pero más frágil que el cristal.\n"
+                    "Los reyes me buscan pero los sabios me huyen.\n"
+                    "Los vivos me cargan pero los muertos me han olvidado.\"\n\n"
+                    "¿Qué es?"
+                ),
+                "options": [
+                    {
+                        "label": "[1] El orgullo",
+                        "response_text": (
+                            "ITZCUINTLI: \"Tarde, pero correcto.\"\n"
+                            "Una pausa.\n"
+                            "\"Diego fue primero. Tú vas segundo. Eso ya lo sabes y no voy\n"
+                            "a pretender que no importa. Importa. Pero acertaste.\"\n\n"
+                            "Las brasas se enfrían.\n\n"
+                            "\"Pasa. Y aprende a pensar antes de hablar.\n"
+                            "El siguiente que te ponga a prueba puede no tener segunda oportunidad.\"\n\n"
+                            "XOCHITL: \"Tardaste. Pero bien. No todos aciertan al principio.\n"
+                            "Aciertan los que piensan, aunque tarden.\"\n\n"
+                            "[ACERTIJO CORRECTO A LA SEGUNDA — paso con nota]"
+                        ),
+                        "sets_flags": ["nivel7_acertijo_segunda", "nivel9_mictlan_nota_acertijo"],
+                        "esp_delta": 1,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[2] El poder",
+                        "response_text": (
+                            "ITZCUINTLI: \"Ya dijiste eso.\"\n"
+                            "Sus brasas se encienden.\n"
+                            "\"Dos errores. El acertijo no tiene tercera.\"\n"
+                            "\"Como te dije al principio: responde o te como de todos modos.\n"
+                            "No respondiste. Así que nos comemos.\"\n\n"
+                            "NARRADOR: Itzcuintli baja de la piedra negra.\n"
+                            "Los hongos a sus patas se apagan de miedo.\n"
+                            "Tu espada ya la tienes desenvainada."
+                        ),
+                        "sets_flag": "combate_forzado_por_acertijo",
+                        "next_phase": "combate_forzado",
+                    },
+                    {
+                        "label": "[3] La memoria",
+                        "response_text": (
+                            "ITZCUINTLI: \"Ya te expliqué por qué no.\n"
+                            "Dos errores. El acertijo no tiene tercera.\"\n"
+                            "Sus colmillos aparecen — no agresivos, resignados.\n\n"
+                            "\"Una lástima. Peleaste bien hasta que llegaste aquí.\"\n\n"
+                            "NARRADOR: Itzcuintli baja de la piedra. El combate es forzoso."
+                        ),
+                        "sets_flag": "combate_forzado_por_acertijo",
+                        "next_phase": "combate_forzado",
+                    },
+                    {
+                        "label": "[4] El miedo",
+                        "response_text": (
+                            "ITZCUINTLI: \"...\"\n\n"
+                            "ITZCUINTLI: \"Dos errores iguales. El miedo dos veces.\n"
+                            "Eso dice algo de ti que no sé si quiero saber.\"\n\n"
+                            "\"El acertijo no tiene tercera. Ya lo sabes.\"\n\n"
+                            "NARRADOR: Itzcuintli baja de la piedra. Resignado casi.\n"
+                            "Hay algo de tristeza en la forma en que sus brasas se encienden."
+                        ),
+                        "sets_flag": "combate_forzado_por_acertijo",
+                        "next_phase": "combate_forzado",
+                    },
+                ],
+            },
+            "combate_forzado": {
+                "text": (
+                    "Itzcuintli avanza. El combate es ahora inevitable.\n"
+                    "No es el mismo que si lo hubieras elegido — él está decidido,\n"
+                    "no divertido. Es más rápido. Más frío.\n\n"
+                    "No puedes vencerlo en este estado.\n"
+                    "Solo decides cómo termina esto."
+                ),
+                "options": [
+                    {
+                        "label": "[1] Pelear hasta el final — derrota honorable",
+                        "response_text": (
+                            "Peleas. Tres flechas no, pero tres zarpas sí te alcanzan.\n"
+                            "Caes de rodillas. Sangras. El jaguar te tiene.\n\n"
+                            "ITZCUINTLI: \"Fallaste el acertijo y no dejaste de pelear.\n"
+                            "Eso dice más de ti que las dos respuestas incorrectas.\"\n\n"
+                            "\"Pasa. Herido. Pero pasa.\"\n\n"
+                            "[COMBATE FORZADO — derrota, paso concedido por valor]"
+                        ),
+                        "sets_flags": ["nivel7_derrota_honorable", "nivel9_mictlan_nota_combate",
+                                       "nivel9_mictlan_nota_acertijo"],
+                        "esp_delta": 1,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[2] Intentar diplomacia de último momento",
+                        "response_text": (
+                            "Bajas las armas.\n\n"
+                            "JUGADOR: \"Pare. Por favor. Cometí un error. Dos.\n"
+                            "Debí haber pensado más. Pero sigo estando aquí.\"\n\n"
+                            "ITZCUINTLI (deteniéndose): \"...\"\n\n"
+                            "\"La diplomacia después de fallar el acertijo dos veces.\n"
+                            "Eso no lo había visto.\"\n"
+                            "Una pausa que se hace muy larga.\n"
+                            "\"Me divierte. Pasa. Pero recuerda esto:\n"
+                            "la diplomacia funciona antes de que te fallen las palabras,\n"
+                            "no después. Aprende la diferencia.\"\n\n"
+                            "[COMBATE FORZADO — evitado con humildad de último momento]"
+                        ),
+                        "sets_flags": ["nivel7_derrota_digna", "nivel9_mictlan_nota_acertijo"],
+                        "nah_delta": 1,
+                        "next_phase": None,
+                    },
+                    {
+                        "label": "[3] Correr — huir antes de que el combate empiece",
+                        "response_text": (
+                            "Giras. Corres.\n\n"
+                            "ITZCUINTLI (a tus espaldas):\n"
+                            "\"Fallaste el acertijo y huiste del combate.\n"
+                            "Eso también es una respuesta. La peor, pero una respuesta.\"\n\n"
+                            "La zarpa no llega.\n\n"
+                            "XOCHITL (cuando llegas al borde): \"Estás vivo.\"\n"
+                            "JUGADOR: \"Estoy vivo.\"\n"
+                            "XOCHITL: \"Sí. Eso es algo.\"\n\n"
+                            "[HUIDA TRAS ACERTIJO FALLIDO — sin combate, reputación mínima]"
+                        ),
+                        "sets_flags": ["nivel7_huida", "nivel9_mictlan_nota_huida",
+                                       "nivel9_mictlan_nota_acertijo", "itzcuintli_sueños"],
+                        "esp_delta": -1, "nah_delta": -1,
                         "next_phase": None,
                     },
                 ],

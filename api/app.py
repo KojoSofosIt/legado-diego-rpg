@@ -318,9 +318,9 @@ def command(req: CmdReq):
         elif milestone == "nivel7_completado":
             extra = (
                 "\n\n──────────────────────────────────────────────────\n"
-                "  ✦  Nivel 7 superado — Itztlan  ✦\n"
+                "  ✦  Nivel 7 superado — Teyollocualoyan  ✦\n"
                 "──────────────────────────────────────────────────\n"
-                "Los reflejos de otras versiones de ti quedan en el hielo.\n"
+                "Itzcuintli y la selva de sombras quedan atrás.\n"
                 "Adelante: la oscuridad total — Apochcaloca.\n\n"
             )
         elif milestone == "nivel8_completado":
