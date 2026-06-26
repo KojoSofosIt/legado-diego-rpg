@@ -1,4 +1,10 @@
-"""FastAPI web server for legadoDiegoRPG."""
+"""FastAPI web server para El Legado de Diego RPG.
+
+© 2026 Kevin Jiménez Olea. Todos los derechos reservados.
+El Legado de Diego: Guardianes del Mictlán
+Queda prohibida la reproducción, distribución o uso comercial
+sin autorización expresa del autor.
+"""
 from __future__ import annotations
 import contextlib
 import io

@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""El Legado de Diego RPG — entry point."""
+"""El Legado de Diego RPG — entry point.
+
+© 2026 Kevin Jiménez Olea. Todos los derechos reservados.
+El Legado de Diego: Guardianes del Mictlán
+Queda prohibida la reproducción, distribución o uso comercial
+sin autorización expresa del autor.
+"""
 from __future__ import annotations
 import sys
 import os
