@@ -98,6 +98,17 @@
   /* Hide sidebar on small screens */
   @media (max-width: 900px) { #ad-sidebar { display: none; } }
 
+  /* ── Contact footer ── */
+  #contact-bar {
+    flex-shrink: 0; text-align: center;
+    padding: 4px 16px; background: var(--bg);
+    border-top: 1px solid var(--border);
+    font-family: 'Courier New', Courier, monospace; font-size: 11px;
+    color: var(--dim);
+  }
+  #contact-bar a { color: var(--dim); text-decoration: none; }
+  #contact-bar a:hover { color: var(--cyan); }
+
   /* ── Input bar ── */
   #input-bar {
     display: flex; align-items: center; gap: 8px;
@@ -218,6 +229,12 @@
     <span id="in-combat-badge">⚔ COMBATE</span>
     <input id="cmd" autofocus autocomplete="off" spellcheck="false"
            placeholder="Escribe un comando y pulsa Enter…">
+  </div>
+
+  <!-- Contact footer -->
+  <div id="contact-bar">
+    © 2026 Kevin Jiménez Olea &nbsp;·&nbsp;
+    Contacto: <a href="mailto:kojo.sofos.it@gmail.com">kojo.sofos.it@gmail.com</a>
   </div>
 
 </div><!-- /layout -->
