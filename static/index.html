@@ -296,6 +296,11 @@ function ansiToHtml(raw) {
 
 // ── Terminal output ───────────────────────────────────────────────────────────
 
+function scrollToBottom() {
+  const t = document.getElementById('terminal');
+  requestAnimationFrame(() => { t.scrollTop = t.scrollHeight; });
+}
+
 function append(text, cls) {
   const t = document.getElementById('terminal');
   const div = document.createElement('div');
@@ -306,7 +311,6 @@ function append(text, cls) {
     div.innerHTML = ansiToHtml(text);
   }
   t.appendChild(div);
-  t.scrollTop = t.scrollHeight;
 }
 
 // ── API helpers ───────────────────────────────────────────────────────────────
@@ -337,6 +341,7 @@ async function newGame() {
   } catch (e) {
     append('Error al iniciar: ' + e.message, 'line-error');
   }
+  scrollToBottom();
 }
 
 async function sendCommand(raw) {
@@ -358,6 +363,7 @@ async function sendCommand(raw) {
       append('Error: ' + e.message, 'line-error');
     }
   }
+  scrollToBottom();
 }
 
 async function doSave(slot) {
