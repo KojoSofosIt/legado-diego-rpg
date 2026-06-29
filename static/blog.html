@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Kevin Jiménez Olea">
+<meta name="description" content="El Legado de Diego: Guardianes del Mictlán — Blog, novedades y opiniones">
+<title>Blog — El Legado de Diego</title>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6443804508474540"
+     crossorigin="anonymous"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0d1117;
+    --bg2:     #161b22;
+    --bg3:     #1c2128;
+    --border:  #30363d;
+    --text:    #c9d1d9;
+    --dim:     #8b949e;
+    --green:   #56d364;
+    --yellow:  #e3b341;
+    --red:     #ff7b7b;
+    --cyan:    #79c0ff;
+    --magenta: #d2a8ff;
+    --orange:  #ffa657;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── Top nav ── */
+  nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  nav .brand {
+    color: var(--yellow);
+    font-weight: bold;
+    font-size: 15px;
+    text-decoration: none;
+  }
+  nav .nav-links { display: flex; gap: 12px; margin-left: auto; }
+  nav a {
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 3px 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: color .15s, border-color .15s;
+  }
+  nav a:hover, nav a.active { color: var(--cyan); border-color: var(--cyan); }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 32px;
+  }
+  @media (max-width: 720px) {
+    .page { grid-template-columns: 1fr; }
+  }
+
+  /* ── Hero ── */
+  .hero {
+    grid-column: 1 / -1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .hero-text { flex: 1; min-width: 200px; }
+  .hero h1 { color: var(--yellow); font-size: 22px; margin-bottom: 6px; }
+  .hero .subtitle { color: var(--magenta); font-size: 13px; margin-bottom: 14px; }
+  .hero p { color: var(--text); line-height: 1.7; font-size: 13px; margin-bottom: 10px; }
+  .hero .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .tag {
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    color: var(--dim);
+  }
+  .tag.green  { border-color: var(--green);   color: var(--green); }
+  .tag.yellow { border-color: var(--yellow);  color: var(--yellow); }
+  .tag.cyan   { border-color: var(--cyan);    color: var(--cyan); }
+  .tag.mag    { border-color: var(--magenta); color: var(--magenta); }
+
+  /* ── Play button ── */
+  .btn-play {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 9px 22px;
+    background: var(--green);
+    color: #000;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-play:hover { filter: brightness(1.15); }
+
+  /* ── Stats grid ── */
+  .stats-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-card .num { font-size: 28px; font-weight: bold; color: var(--cyan); }
+  .stat-card .lbl { font-size: 11px; color: var(--dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── Main column ── */
+  main { min-width: 0; }
+
+  /* ── Blog posts ── */
+  .section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 16px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .post {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .post-date { font-size: 11px; color: var(--dim); margin-bottom: 6px; }
+  .post h2 { color: var(--yellow); font-size: 15px; margin-bottom: 10px; }
+  .post p  { color: var(--text); line-height: 1.7; font-size: 13px; margin-bottom: 8px; }
+  .post p:last-child { margin-bottom: 0; }
+  .post .post-tag { color: var(--orange); font-size: 11px; }
+
+  /* ── Feedback form ── */
+  .feedback-section { margin-top: 32px; }
+  form { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 22px; }
+  form label { display: block; font-size: 12px; color: var(--dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  form input, form textarea, form select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 14px;
+    outline: none;
+  }
+  form input:focus, form textarea:focus, form select:focus { border-color: var(--cyan); }
+  form textarea { resize: vertical; min-height: 90px; }
+  .star-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .star-row label { text-transform: none; letter-spacing: 0; font-size: 22px; cursor: pointer; color: var(--border); margin-bottom: 0; }
+  .star-row input[type=radio] { display: none; }
+  .star-row input[type=radio]:checked ~ label,
+  .star-row label:hover,
+  .star-row label:hover ~ label { color: var(--yellow) !important; }
+  /* RTL trick for star hover */
+  .star-row { flex-direction: row-reverse; justify-content: flex-end; }
+  .star-row label:hover, .star-row label:hover ~ label { color: var(--yellow); }
+  .btn-submit {
+    padding: 8px 22px;
+    background: var(--cyan);
+    color: #000;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .btn-submit:hover { filter: brightness(1.1); }
+  #feedback-msg { margin-top: 10px; font-size: 13px; color: var(--green); display: none; }
+  #feedback-err { margin-top: 10px; font-size: 13px; color: var(--red); display: none; }
+
+  /* ── Sidebar ── */
+  aside { min-width: 0; }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px;
+    margin-bottom: 20px;
+  }
+  .card h3 { color: var(--yellow); font-size: 13px; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+
+  /* Social links */
+  .social-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .social-list li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: border-color .15s, color .15s;
+  }
+  .social-list li a:hover { border-color: var(--border); color: var(--cyan); }
+  .social-icon { width: 18px; text-align: center; font-size: 16px; }
+
+  /* Changelog */
+  .changelog { list-style: none; }
+  .changelog li {
+    display: flex;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    align-items: baseline;
+  }
+  .changelog li:last-child { border-bottom: none; }
+  .cl-ver { color: var(--green); flex-shrink: 0; font-weight: bold; }
+  .cl-desc { color: var(--text); }
+
+  /* Mictlan levels */
+  .level-list { list-style: none; }
+  .level-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .level-list li:last-child { border-bottom: none; }
+  .lv-num { color: var(--magenta); flex-shrink: 0; width: 20px; font-weight: bold; }
+  .lv-name { color: var(--text); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--dim);
+    font-size: 11px;
+    margin-top: 40px;
+  }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="brand" href="/">⚔ El Legado de Diego</a>
+  <div class="nav-links">
+    <a href="/">Jugar</a>
+    <a href="/blog" class="active">Blog</a>
+    <a href="mailto:kojo.sofos.it@gmail.com">Contacto</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-text">
+      <h1>El Legado de Diego: Guardianes del Mictlán</h1>
+      <div class="subtitle">RPG de narrativa ramificada · Mitología Azteca · Vía C — CLI</div>
+      <p>
+        Acompaña a Diego en su descenso por los nueve niveles del Mictlán, el inframundo azteca.
+        Cada decisión moldea la dualidad entre luz y sombra, y determina uno de los <strong style="color:var(--yellow)">15 finales</strong> posibles.
+      </p>
+      <p>
+        Una aventura de texto puro donde la mitología prehispánica cobra vida a través de palabras,
+        acertijos y consecuencias narrativas que se acumulan a lo largo del viaje.
+      </p>
+      <div class="tags">
+        <span class="tag green">Gratis</span>
+        <span class="tag yellow">Mitología Azteca</span>
+        <span class="tag cyan">Narrativa Ramificada</span>
+        <span class="tag mag">Python · FastAPI</span>
+        <span class="tag">Web / CLI</span>
+      </div>
+      <a class="btn-play" href="/">▶ Jugar ahora</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="num">9</div>
+      <div class="lbl">Niveles del Mictlán</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">15</div>
+      <div class="lbl">Finales posibles</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">50+</div>
+      <div class="lbl">Puntos de decisión</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">0–20</div>
+      <div class="lbl">Medidor de dualidad</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">0</div>
+      <div class="lbl">Dependencias runtime</div>
+    </div>
+  </div>
+
+  <!-- Main column -->
+  <main>
+
+    <!-- Posts -->
+    <div class="section-title">Novedades del desarrollo</div>
+
+    <article class="post">
+      <div class="post-date">2026-06-29 &nbsp;·&nbsp; <span class="post-tag">#lanzamiento</span></div>
+      <h2>Versión web disponible — Vía C en línea</h2>
+      <p>
+        El motor CLI de <em>El Legado de Diego</em> ya corre completamente en el navegador.
+        Sin instalaciones, sin descargas: solo texto, decisiones y mitología azteca.
+      </p>
+      <p>
+        La versión web mantiene todas las mecánicas del CLI original: sistema de guardado por slots,
+        medidor de dualidad, combate por turnos, acertijos de acceso entre niveles y los 15 finales narrativos.
+      </p>
+    </article>
+
+    <article class="post">
+      <div class="post-date">2026-06-15 &nbsp;·&nbsp; <span class="post-tag">#diseño</span></div>
+      <h2>El sistema de dualidad: cómo moldea el Mictlán</h2>
+      <p>
+        Diego carga consigo un medidor de dualidad (0–20). Cada acción mueve la aguja:
+        los sacrificios empujan hacia la oscuridad, la compasión hacia la luz.
+      </p>
+      <p>
+        El valor final, combinado con la elección del acertijo del trono de Mictlantecuhtli,
+        determina cuál de los 15 finales se desbloquea. No hay respuesta "correcta" —
+        el Mictlán juzga la coherencia del viaje completo.
+      </p>
+    </article>
+
+    <article class="post">
+      <div class="post-date">2026-05-30 &nbsp;·&nbsp; <span class="post-tag">#código</span></div>
+      <h2>Arquitectura: cero dependencias en runtime</h2>
+      <p>
+        Por diseño (ADR-C-001), el motor del juego corre con Python puro — sin bibliotecas externas
+        en tiempo de ejecución. La narrativa vive en archivos <code>.md</code> compilados a
+        <code>story.json</code> en tiempo de build. El servidor web es FastAPI + uvicorn, pero la
+        lógica del juego es completamente independiente.
+      </p>
+    </article>
+
+    <!-- Feedback form -->
+    <div class="feedback-section">
+      <div class="section-title">Deja tu opinión</div>
+      <form id="feedback-form" onsubmit="submitFeedback(event)">
+
+        <label for="fb-name">Tu nombre</label>
+        <input type="text" id="fb-name" name="name" placeholder="Jugador anónimo del Mictlán" maxlength="80">
+
+        <label for="fb-email">Correo (opcional)</label>
+        <input type="email" id="fb-email" name="email" placeholder="para que podamos responderte" maxlength="120">
+
+        <label>Calificación</label>
+        <div class="star-row" id="star-row">
+          <input type="radio" id="s5" name="rating" value="5" checked>
+          <label for="s5" title="5 estrellas">★</label>
+          <input type="radio" id="s4" name="rating" value="4">
+          <label for="s4" title="4 estrellas">★</label>
+          <input type="radio" id="s3" name="rating" value="3">
+          <label for="s3" title="3 estrellas">★</label>
+          <input type="radio" id="s2" name="rating" value="2">
+          <label for="s2" title="2 estrellas">★</label>
+          <input type="radio" id="s1" name="rating" value="1">
+          <label for="s1" title="1 estrella">★</label>
+        </div>
+
+        <label for="fb-msg">Tu mensaje</label>
+        <textarea id="fb-msg" name="message" placeholder="¿Qué te pareció el juego? ¿Bugs? ¿Sugerencias?" maxlength="2000"></textarea>
+
+        <button type="submit" class="btn-submit">Enviar opinión</button>
+        <div id="feedback-msg">¡Gracias! Tu opinión fue recibida.</div>
+        <div id="feedback-err"></div>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- Sidebar -->
+  <aside>
+
+    <!-- Social links -->
+    <div class="card">
+      <h3>Redes y comunidad</h3>
+      <ul class="social-list">
+        <li>
+          <a href="https://twitter.com/" target="_blank" rel="noopener">
+            <span class="social-icon">𝕏</span>
+            @LegadoDiegoRPG
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener">
+            <span class="social-icon">▶</span>
+            YouTube — Devlog
+          </a>
+        </li>
+        <li>
+          <a href="https://itch.io/" target="_blank" rel="noopener">
+            <span class="social-icon">🎮</span>
+            itch.io — Página del juego
+          </a>
+        </li>
+        <li>
+          <a href="https://discord.gg/" target="_blank" rel="noopener">
+            <span class="social-icon">💬</span>
+            Discord — Comunidad
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/" target="_blank" rel="noopener">
+            <span class="social-icon">⎇</span>
+            GitHub — Código fuente
+          </a>
+        </li>
+        <li>
+          <a href="mailto:kojo.sofos.it@gmail.com">
+            <span class="social-icon">✉</span>
+            kojo.sofos.it@gmail.com
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Levels -->
+    <div class="card">
+      <h3>Los 9 niveles del Mictlán</h3>
+      <ol class="level-list">
+        <li><span class="lv-num">1</span><span class="lv-name">Chiconahuapan — El río</span></li>
+        <li><span class="lv-num">2</span><span class="lv-name">Tepectli Monamictlan</span></li>
+        <li><span class="lv-num">3</span><span class="lv-name">Iztepetl — El cerro</span></li>
+        <li><span class="lv-num">4</span><span class="lv-name">Itzehecayan — El viento</span></li>
+        <li><span class="lv-num">5</span><span class="lv-name">Pancuecuetlacayan</span></li>
+        <li><span class="lv-num">6</span><span class="lv-name">Temiminaloyan</span></li>
+        <li><span class="lv-num">7</span><span class="lv-name">Teyollocualoyan</span></li>
+        <li><span class="lv-num">8</span><span class="lv-name">Apochcaloca</span></li>
+        <li><span class="lv-num">9</span><span class="lv-name">Chicnauhmictlan — El trono</span></li>
+      </ol>
+    </div>
+
+    <!-- Changelog -->
+    <div class="card">
+      <h3>Changelog</h3>
+      <ul class="changelog">
+        <li><span class="cl-ver">v0.4</span><span class="cl-desc">Blog, feedback y redes sociales</span></li>
+        <li><span class="cl-ver">v0.3</span><span class="cl-desc">Web UI con guardado por slots</span></li>
+        <li><span class="cl-ver">v0.2</span><span class="cl-desc">9 niveles + 15 finales completos</span></li>
+        <li><span class="cl-ver">v0.1</span><span class="cl-desc">Motor CLI inicial, combate y acertijos</span></li>
+      </ul>
+    </div>
+
+    <!-- Ad slot -->
+    <div style="text-align:center">
+      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Publicidad</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:250px;height:250px"
+           data-ad-client="ca-pub-6443804508474540"
+           data-ad-slot="YOUR_SIDEBAR_SLOT_ID"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+  </aside>
+
+</div><!-- /page -->
+
+<footer>
+  © 2026 Kevin Jiménez Olea &nbsp;·&nbsp;
+  El Legado de Diego: Guardianes del Mictlán &nbsp;·&nbsp;
+  <a href="mailto:kojo.sofos.it@gmail.com">kojo.sofos.it@gmail.com</a>
+  &nbsp;·&nbsp; Todos los derechos reservados.
+</footer>
+
+<script>
+'use strict';
+
+async function submitFeedback(e) {
+  e.preventDefault();
+  const msgEl = document.getElementById('feedback-msg');
+  const errEl = document.getElementById('feedback-err');
+  msgEl.style.display = 'none';
+  errEl.style.display = 'none';
+
+  const name    = document.getElementById('fb-name').value.trim();
+  const email   = document.getElementById('fb-email').value.trim();
+  const message = document.getElementById('fb-msg').value.trim();
+  const rating  = parseInt(document.querySelector('input[name="rating"]:checked').value, 10);
+
+  if (!message) {
+    errEl.textContent = 'El mensaje no puede estar vacío.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const r = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name || 'Anónimo', email, message, rating }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || r.statusText);
+    msgEl.textContent = d.message;
+    msgEl.style.display = 'block';
+    document.getElementById('feedback-form').reset();
+  } catch (err) {
+    errEl.textContent = 'Error al enviar: ' + err.message;
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

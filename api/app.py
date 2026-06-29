@@ -8,10 +8,12 @@ sin autorización expresa del autor.
 from __future__ import annotations
 import contextlib
 import io
+import os
 import sys
 import time
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -110,12 +112,73 @@ class LoadReq(BaseModel):
     session_id: str
     slot: int
 
+
+class FeedbackReq(BaseModel):
+    name: str
+    email: str
+    message: str
+    rating: int = 5
+
 # ── Routes ────────────────────────────────────────────────────────────────────
+
+
+# ── DynamoDB feedback ─────────────────────────────────────────────────────────
+# Required env vars:
+#   DYNAMODB_TABLE  — table name (partition key: "id", type String)
+#   AWS_REGION      — e.g. "us-east-1"
+#   AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY  (or use an IAM role)
+
+_dynamo_client = None
+
+
+def _dynamo():
+    global _dynamo_client
+    if _dynamo_client is None:
+        try:
+            import boto3
+            region = os.environ.get("AWS_REGION", "us-east-1")
+            _dynamo_client = boto3.client("dynamodb", region_name=region)
+        except ImportError:
+            raise HTTPException(503, "boto3 no instalado. Añádelo a requirements-web.txt.")
+    return _dynamo_client
 
 
 @app.get("/", response_class=HTMLResponse)
 def index():
     return (ROOT / "static" / "index.html").read_text(encoding="utf-8")
+
+
+@app.get("/blog", response_class=HTMLResponse)
+def blog():
+    return (ROOT / "static" / "blog.html").read_text(encoding="utf-8")
+
+
+@app.post("/api/feedback")
+def submit_feedback(req: FeedbackReq):
+    name = req.name.strip()[:80]
+    email = req.email.strip()[:120]
+    message = req.message.strip()[:2000]
+    rating = max(1, min(5, req.rating))
+    if not name or not message:
+        raise HTTPException(400, "Nombre y mensaje son obligatorios.")
+
+    table = os.environ.get("DYNAMODB_TABLE")
+    if not table:
+        raise HTTPException(503, "DYNAMODB_TABLE no configurado.")
+
+    item = {
+        "id":      {"S": uuid.uuid4().hex},
+        "ts":      {"S": datetime.now(timezone.utc).isoformat()},
+        "name":    {"S": name},
+        "email":   {"S": email or ""},
+        "message": {"S": message},
+        "rating":  {"N": str(rating)},
+    }
+    try:
+        _dynamo().put_item(TableName=table, Item=item)
+    except Exception as exc:
+        raise HTTPException(502, f"Error al guardar feedback: {exc}")
+    return {"ok": True, "message": "¡Gracias por tu opinión!"}
 
 
 @app.post("/api/new")
