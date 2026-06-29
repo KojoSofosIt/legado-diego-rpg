@@ -258,10 +258,15 @@
 <script>
 'use strict';
 
-let SID = null;
-let inCombat = false;
+const SAVE_SLOTS = 5;
+const LS_SID    = 'ldd_sid';
+const LS_SLOT   = slot => `ldd_save_${slot}`;
+
+let SID        = null;
+let inCombat   = false;
+let lastState  = null;   // player_state from most recent server response
 let cmdHistory = [];
-let histPos = -1;
+let histPos    = -1;
 
 // ── ANSI → HTML ──────────────────────────────────────────────────────────────
 
@@ -270,50 +275,33 @@ function ansiToHtml(raw) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-
   const parts = esc.split(/\x1b\[([0-9;]*)m/);
-  let html = '';
-  let open = [];
-
+  let html = '', open = [];
   for (let i = 0; i < parts.length; i++) {
-    if (i % 2 === 0) {
-      html += parts[i];
-    } else {
+    if (i % 2 === 0) { html += parts[i]; }
+    else {
       const codes = parts[i] === '' ? ['0'] : parts[i].split(';');
       for (const c of codes) {
-        if (c === '0') {
-          html += '</span>'.repeat(open.length);
-          open = [];
-        } else {
-          const cls = c === '1' ? 'ab' : c === '2' ? 'ad' : `a${c}`;
-          html += `<span class="${cls}">`;
-          open.push(cls);
-        }
+        if (c === '0') { html += '</span>'.repeat(open.length); open = []; }
+        else { const cls = c==='1'?'ab':c==='2'?'ad':`a${c}`; html+=`<span class="${cls}">`; open.push(cls); }
       }
     }
   }
-  html += '</span>'.repeat(open.length);
-  return html;
+  return html + '</span>'.repeat(open.length);
 }
 
-// ── Terminal output ───────────────────────────────────────────────────────────
+// ── Terminal ──────────────────────────────────────────────────────────────────
 
 function scrollToBottom() {
   const t = document.getElementById('terminal');
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => { t.scrollTop = t.scrollHeight; });
-  });
+  requestAnimationFrame(() => requestAnimationFrame(() => { t.scrollTop = t.scrollHeight; }));
 }
 
 function append(text, cls) {
   const t = document.getElementById('terminal');
   const div = document.createElement('div');
-  if (cls) {
-    div.className = cls;
-    div.textContent = text;
-  } else {
-    div.innerHTML = ansiToHtml(text);
-  }
+  if (cls) { div.className = cls; div.textContent = text; }
+  else      { div.innerHTML = ansiToHtml(text); }
   t.appendChild(div);
 }
 
@@ -332,66 +320,114 @@ async function post(url, body) {
   return r.json();
 }
 
+function applyResponse(d) {
+  if (d.player_state) lastState = d.player_state;
+  if (d.output)       append(d.output);
+  inCombat = d.in_combat;
+  updateCombatBadge();
+  if (d.game_over)    append('\n[ FIN DE PARTIDA ]', 'line-error');
+  scrollToBottom();
+}
+
 // ── Game actions ──────────────────────────────────────────────────────────────
 
 async function newGame() {
   document.getElementById('terminal').innerHTML = '';
-  inCombat = false;
+  inCombat = false; lastState = null;
   updateCombatBadge();
   try {
     const d = await post('/api/new', {});
     SID = d.session_id;
-    append(d.output);
+    localStorage.setItem(LS_SID, SID);
+    applyResponse(d);
   } catch (e) {
     append('Error al iniciar: ' + e.message, 'line-error');
   }
-  scrollToBottom();
 }
 
 async function sendCommand(raw) {
   if (!SID) return;
+  const verb = raw.trim().toLowerCase().split(/\s+/)[0];
+  const parts = raw.trim().split(/\s+/);
+
+  // Intercept save / load locally
+  if (['guardar', 'save', 'g'].includes(verb)) {
+    append('› ' + raw, 'line-echo');
+    const slot = parseInt(parts[1]) || 1;
+    doSave(slot);
+    return;
+  }
+  if (['cargar', 'load'].includes(verb)) {
+    append('› ' + raw, 'line-echo');
+    openLoadModal();
+    return;
+  }
+
   append('› ' + raw, 'line-echo');
   try {
     const d = await post('/api/command', { session_id: SID, command: raw });
-    if (d.output) append(d.output);
-    inCombat = d.in_combat;
-    updateCombatBadge();
-    if (d.game_over) {
-      append('\n[ FIN DE PARTIDA ]', 'line-error');
-    }
+    applyResponse(d);
   } catch (e) {
     if (e.message.includes('expirada') || e.message.includes('encontrada')) {
-      append('Sesión perdida. Iniciando nueva partida…', 'line-error');
+      append('Sesión expirada. Iniciando nueva partida…', 'line-error');
       await newGame();
     } else {
       append('Error: ' + e.message, 'line-error');
     }
   }
-  scrollToBottom();
 }
 
-async function doSave(slot) {
-  if (!SID) return;
+// ── localStorage save / load ──────────────────────────────────────────────────
+
+function doSave(slot) {
+  if (!lastState) { append('  Nada que guardar aún.\n', 'line-error'); return; }
   slot = slot || 1;
-  try {
-    const d = await post('/api/save', { session_id: SID, slot });
-    append('  ' + d.message + '\n');
-  } catch (e) {
-    append('  Error al guardar: ' + e.message + '\n', 'line-error');
-  }
+  const entry = {
+    state:    lastState,
+    saved_at: new Date().toLocaleString('es-MX'),
+    position: lastState.position,
+    hp:       lastState.hp,
+    max_hp:   lastState.max_hp,
+  };
+  localStorage.setItem(LS_SLOT(slot), JSON.stringify(entry));
+  append(`  Partida guardada en slot ${slot}. (navegador)\n`);
 }
 
 async function loadSlot(slot) {
   closeModal();
-  if (!SID) return;
+  const raw = localStorage.getItem(LS_SLOT(slot));
+  if (!raw) { append(`  Slot ${slot} vacío.\n`, 'line-error'); return; }
+  const entry = JSON.parse(raw);
   try {
-    const d = await post('/api/load', { session_id: SID, slot });
-    inCombat = false;
-    updateCombatBadge();
-    append(d.output);
+    const d = await post('/api/restore', { player_state: entry.state });
+    SID = d.session_id;
+    localStorage.setItem(LS_SID, SID);
+    applyResponse(d);
   } catch (e) {
     append('  Error al cargar: ' + e.message + '\n', 'line-error');
   }
+}
+
+function openLoadModal() {
+  const body = document.getElementById('modal-body');
+  const saves = [];
+  for (let i = 1; i <= SAVE_SLOTS; i++) {
+    const raw = localStorage.getItem(LS_SLOT(i));
+    if (raw) {
+      try { saves.push({ slot: i, ...JSON.parse(raw) }); } catch {}
+    }
+  }
+  body.innerHTML = saves.length === 0
+    ? '<div class="empty">No hay partidas guardadas en este navegador.</div>'
+    : saves.map(s => `
+        <div class="save-row">
+          <div>
+            <div class="save-label">Slot ${s.slot} — ${s.position}</div>
+            <div class="save-meta">HP ${s.hp}/${s.max_hp} &nbsp;·&nbsp; ${s.saved_at}</div>
+          </div>
+          <button class="btn-load" onclick="loadSlot(${s.slot})">Cargar</button>
+        </div>`).join('');
+  document.getElementById('modal-overlay').classList.add('open');
 }
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
@@ -408,33 +444,6 @@ function confirmNewGame() {
 
 function updateCombatBadge() {
   document.getElementById('in-combat-badge').style.display = inCombat ? 'inline' : 'none';
-}
-
-// ── Save/Load modal ───────────────────────────────────────────────────────────
-
-async function openLoadModal() {
-  if (!SID) return;
-  const body = document.getElementById('modal-body');
-  body.innerHTML = '<div class="empty">Cargando…</div>';
-  document.getElementById('modal-overlay').classList.add('open');
-  try {
-    const d = await fetch(`/api/saves/${SID}`).then(r => r.json());
-    if (!d.saves || d.saves.length === 0) {
-      body.innerHTML = '<div class="empty">No hay partidas guardadas.</div>';
-      return;
-    }
-    body.innerHTML = d.saves.map(s => `
-      <div class="save-row">
-        <div>
-          <div class="save-label">Slot ${s.slot} — ${s.position}</div>
-          <div class="save-meta">HP ${s.hp}/${s.max_hp} &nbsp;·&nbsp; ${s.saved_at}</div>
-        </div>
-        <button class="btn-load" onclick="loadSlot(${s.slot})">Cargar</button>
-      </div>
-    `).join('');
-  } catch (e) {
-    body.innerHTML = `<div class="empty">Error: ${e.message}</div>`;
-  }
 }
 
 function closeModal() {
@@ -473,8 +482,25 @@ document.getElementById('modal-overlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
 });
 
-// ── Start ─────────────────────────────────────────────────────────────────────
-newGame();
+// ── Startup: restore previous session or start fresh ─────────────────────────
+
+async function startup() {
+  const savedSid = localStorage.getItem(LS_SID);
+  if (savedSid) {
+    try {
+      SID = savedSid;
+      const d = await post('/api/command', { session_id: savedSid, command: 'mirar' });
+      applyResponse(d);
+      return;
+    } catch (e) {
+      SID = null;
+      // session expired — fall through to new game
+    }
+  }
+  await newGame();
+}
+
+startup();
 </script>
 </body>
 </html>

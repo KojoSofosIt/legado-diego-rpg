@@ -31,7 +31,6 @@ from src.ui import UI
 from src.combat import CombatEngine
 from src.challenge import ChallengeEngine
 from src.commands import CommandParser, DIRECTION_MAP
-from src.save import save_game, load_game, list_saves
 from src.ending_resolver import EndingResolver
 from content.world_data import CREATURES
 
@@ -103,14 +102,8 @@ class CmdReq(BaseModel):
     command: str
 
 
-class SaveReq(BaseModel):
-    session_id: str
-    slot: int = 1
-
-
-class LoadReq(BaseModel):
-    session_id: str
-    slot: int
+class RestoreReq(BaseModel):
+    player_state: dict
 
 
 class FeedbackReq(BaseModel):
@@ -186,7 +179,47 @@ def new_game():
     sid, sess = _make_session()
     out = _cap(sess.ui.titulo) + _cap(sess.ui.describe_room,
                sess.world.get_room(sess.player.position), sess.player)
-    return {"session_id": sid, "output": out, "game_over": False, "in_combat": False}
+    return {"session_id": sid, "output": out, "game_over": False,
+            "in_combat": False, "player_state": _player_state(sess.player)}
+
+
+@app.post("/api/restore")
+def restore_game(req: RestoreReq):
+    sid, sess = _make_session()
+    st = req.player_state
+    p = sess.player
+    p.position        = st["position"]
+    p.hp              = st["hp"]
+    p.max_hp          = st["max_hp"]
+    p.esp             = st["esp"]
+    p.nah             = st["nah"]
+    p.inventory       = list(st.get("inventory", []))
+    p.equipped_weapon = st.get("equipped_weapon")
+    p.picked_up       = set(st.get("picked_up", []))
+    p.defeated        = set(st.get("defeated", []))
+    p.npc_spoken      = set(st.get("npc_spoken", []))
+    p.flags           = set(st.get("flags", []))
+    out = "  Partida cargada.\n" + _cap(
+        sess.ui.describe_room, sess.world.get_room(p.position), p
+    )
+    return {"session_id": sid, "output": out, "game_over": False,
+            "in_combat": False, "player_state": _player_state(p)}
+
+
+def _player_state(p: Player) -> dict:
+    return {
+        "position": p.position,
+        "hp": p.hp,
+        "max_hp": p.max_hp,
+        "esp": p.esp,
+        "nah": p.nah,
+        "inventory": p.inventory,
+        "equipped_weapon": p.equipped_weapon,
+        "picked_up": sorted(p.picked_up),
+        "defeated": sorted(p.defeated),
+        "npc_spoken": sorted(p.npc_spoken),
+        "flags": sorted(p.flags),
+    }
 
 
 def _base_resp(sess: GameSession, out: str, extra: str = "") -> dict:
@@ -195,6 +228,7 @@ def _base_resp(sess: GameSession, out: str, extra: str = "") -> dict:
         "game_over": sess.player.game_over,
         "in_combat": sess.in_combat,
         "in_challenge": sess.in_challenge,
+        "player_state": _player_state(sess.player),
     }
 
 
@@ -287,39 +321,6 @@ def command(req: CmdReq):
                 return _base_resp(sess, out)
             # Already done — fall through to normal command handling
 
-    # ── Save/load: handled at API layer to avoid input() prompts ───────────
-    if verb in ("guardar", "save", "g"):
-        slot = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
-        try:
-            path = save_game(sess.player, slot=slot)
-            return _base_resp(sess, f"  Partida guardada en slot {slot}. ({path.name})\n")
-        except Exception as exc:
-            return _base_resp(sess, f"  Error al guardar: {exc}\n")
-
-    if verb in ("cargar", "load"):
-        if len(parts) < 2 or not parts[1].isdigit():
-            saves = list_saves()
-            if not saves:
-                return _base_resp(sess, "  No hay partidas guardadas.\n")
-            lines = "\n─── Partidas guardadas ───\n"
-            for s in saves:
-                lines += (f"  [{s['slot']}] HP {s['hp']}/{s['max_hp']}  "
-                          f"Sala: {s['position']}  ({s['saved_at']})\n")
-            lines += "\nEscribe: cargar <número de slot>\n"
-            return _base_resp(sess, lines)
-        slot = int(parts[1])
-        try:
-            loaded = load_game(slot=slot)
-        except FileNotFoundError as exc:
-            return _base_resp(sess, f"  {exc}\n")
-        except Exception as exc:
-            return _base_resp(sess, f"  Error al cargar: {exc}\n")
-        sess.player.__dict__.update(loaded.__dict__)
-        out = (f"  Partida cargada (slot {slot}).\n" +
-               _cap(sess.ui.describe_room,
-                    sess.world.get_room(sess.player.position), sess.player))
-        return _base_resp(sess, out)
-
     if verb in ("salir", "quit", "exit", "q"):
         return _base_resp(sess, "  Guarda tu partida con 'guardar' antes de cerrar la pestaña.\n")
 
@@ -410,37 +411,3 @@ def command(req: CmdReq):
     return _base_resp(sess, out, extra)
 
 
-@app.get("/api/saves/{session_id}")
-def get_saves(session_id: str):
-    _get(session_id)
-    saves = list_saves()
-    return {"saves": [
-        {"slot": s["slot"], "position": s["position"],
-         "hp": s["hp"], "max_hp": s["max_hp"], "saved_at": s["saved_at"]}
-        for s in saves
-    ]}
-
-
-@app.post("/api/save")
-def api_save(req: SaveReq):
-    sess = _get(req.session_id)
-    try:
-        path = save_game(sess.player, slot=req.slot)
-        return {"ok": True, "message": f"Guardado en slot {req.slot} ({path.name})"}
-    except Exception as exc:
-        raise HTTPException(500, str(exc))
-
-
-@app.post("/api/load")
-def api_load(req: LoadReq):
-    sess = _get(req.session_id)
-    try:
-        loaded = load_game(slot=req.slot)
-    except FileNotFoundError as exc:
-        raise HTTPException(404, str(exc))
-    except Exception as exc:
-        raise HTTPException(500, str(exc))
-    sess.player.__dict__.update(loaded.__dict__)
-    out = _cap(sess.ui.describe_room,
-               sess.world.get_room(sess.player.position), sess.player)
-    return {"ok": True, "output": f"  Partida cargada (slot {req.slot}).\n" + out}
