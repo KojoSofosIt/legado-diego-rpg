@@ -276,6 +276,38 @@
   }
   footer a { color: var(--dim); text-decoration: none; }
   footer a:hover { color: var(--cyan); }
+
+  /* ── Side ad columns ── */
+  .outer-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .content-col {
+    flex: 1;
+    min-width: 0;
+    max-width: 940px;
+  }
+  .ad-col {
+    width: 180px;
+    flex-shrink: 0;
+    padding-top: 32px;
+    text-align: center;
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+  }
+  .ad-col .ad-label {
+    font-size: 10px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  /* hide side ads when viewport is too narrow */
+  @media (max-width: 1340px) {
+    .ad-col { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -290,6 +322,19 @@
   </div>
 </nav>
 
+<div class="outer-wrap">
+
+<!-- Left ad — replace YOUR_LEFT_SLOT_ID with your AdSense slot -->
+<div class="ad-col">
+  <div class="ad-label">Publicidad</div>
+  <ins class="adsbygoogle"
+       style="display:inline-block;width:160px;height:600px"
+       data-ad-client="ca-pub-6443804508474540"
+       data-ad-slot="YOUR_LEFT_SLOT_ID"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="content-col">
 <div class="page">
 
   <!-- Hero -->
@@ -513,6 +558,19 @@
   <a href="mailto:kojo.sofos.it@gmail.com">kojo.sofos.it@gmail.com</a>
   &nbsp;·&nbsp; Todos los derechos reservados.
 </footer>
+</div><!-- /content-col -->
+
+<!-- Right ad — replace YOUR_RIGHT_SLOT_ID with your AdSense slot -->
+<div class="ad-col">
+  <div class="ad-label">Publicidad</div>
+  <ins class="adsbygoogle"
+       style="display:inline-block;width:160px;height:600px"
+       data-ad-client="ca-pub-6443804508474540"
+       data-ad-slot="YOUR_RIGHT_SLOT_ID"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+</div><!-- /outer-wrap -->
 
 <script>
 'use strict';
