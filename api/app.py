@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from src.player import Player
@@ -35,6 +36,7 @@ from src.ending_resolver import EndingResolver
 from content.world_data import CREATURES
 
 app = FastAPI(title="El Legado de Diego RPG")
+app.mount("/static", StaticFiles(directory=str(ROOT / "static")), name="static")
 
 # ── Session store ─────────────────────────────────────────────────────────────
 
