@@ -335,6 +335,7 @@
   <div class="nav-links">
     <a href="/">Jugar</a>
     <a href="/blog" class="active">Blog</a>
+    <a href="/about">Acerca</a>
     <a href="mailto:kojo.sofos.it@gmail.com">Contacto</a>
   </div>
 </nav>
@@ -412,39 +413,192 @@
 
     <article class="post">
       <div class="post-date">2026-06-29 &nbsp;·&nbsp; <span class="post-tag">#lanzamiento</span></div>
-      <h2>Versión web disponible — Vía C en línea</h2>
+      <h2>Versión web disponible — El Legado de Diego ya está en línea</h2>
       <p>
-        El motor CLI de <em>El Legado de Diego</em> ya corre completamente en el navegador.
-        Sin instalaciones, sin descargas: solo texto, decisiones y mitología azteca.
+        Después de meses de desarrollo, <em>El Legado de Diego: Guardianes del Mictlán</em> ya está
+        disponible de forma gratuita en el navegador. Sin instalaciones, sin cuentas, sin descargas:
+        solo abre el enlace y comienza tu descenso al inframundo azteca.
       </p>
       <p>
-        La versión web mantiene todas las mecánicas del CLI original: sistema de guardado por slots,
-        medidor de dualidad, combate por turnos, acertijos de acceso entre niveles y los 15 finales narrativos.
+        La versión web mantiene todas las mecánicas del motor CLI original: sistema de guardado por
+        slots en el navegador (hasta 5 partidas guardadas), medidor de dualidad con efectos visibles
+        en el diálogo, combate por turnos con guardianes del Mictlán, acertijos de acceso entre
+        niveles y los 15 finales narrativos únicos.
+      </p>
+      <p>
+        El juego corre en cualquier dispositivo con navegador moderno. No requiere cuenta de usuario
+        ni registro. Tu progreso se guarda localmente en tu navegador. Puedes retomarlo cuando
+        quieras o empezar una nueva partida en cualquier momento.
+      </p>
+      <p>
+        Esta primera versión cubre los nueve niveles completos del Mictlán, con más de 50 puntos
+        de decisión que afectan el flujo de la narrativa. Las decisiones no son simples bifurcaciones:
+        acumulan efectos en el medidor de dualidad que se resuelven al final del viaje.
       </p>
     </article>
 
     <article class="post">
       <div class="post-date">2026-06-15 &nbsp;·&nbsp; <span class="post-tag">#diseño</span></div>
-      <h2>El sistema de dualidad: cómo moldea el Mictlán</h2>
+      <h2>El sistema de dualidad: cómo cada decisión moldea tu destino en el Mictlán</h2>
       <p>
-        Diego carga consigo un medidor de dualidad (0–20). Cada acción mueve la aguja:
-        los sacrificios empujan hacia la oscuridad, la compasión hacia la luz.
+        Diego carga consigo un medidor de dualidad que va de 0 a 20. No es un marcador de bien o mal
+        — es una medida de lo que Diego está dispuesto a sacrificar para completar su misión. Un
+        valor bajo (cerca de 0) indica que Diego prioriza la compasión, la diplomacia y el respeto
+        a las leyes del inframundo. Un valor alto (cerca de 20) indica que Diego está dispuesto a
+        transgredir, sacrificar y imponerse para avanzar.
       </p>
       <p>
-        El valor final, combinado con la elección del acertijo del trono de Mictlantecuhtli,
-        determina cuál de los 15 finales se desbloquea. No hay respuesta "correcta" —
-        el Mictlán juzga la coherencia del viaje completo.
+        Cada encuentro con un guardián, cada acertijo y cada diálogo con los habitantes del Mictlán
+        mueve la aguja. A veces un punto, a veces tres. Las acciones violentas o egoístas empujan
+        hacia la oscuridad. La compasión, la negociación y el sacrificio propio empujan hacia la luz.
+      </p>
+      <p>
+        El medidor no es solo un número — afecta activamente cómo responde el mundo. Los guardianes
+        reconocen tu reputación. Ciertos NPCs solo hablan contigo si tu dualidad está por debajo de
+        cierto umbral. Algunas rutas de escape solo se abren si has demostrado ser digno de confianza.
+        Y algunos atajos oscuros solo están disponibles si ya has cruzado ciertas líneas.
+      </p>
+      <p>
+        Al llegar al nivel IX — el Trono de Mictlantecuhtli — el dios de la muerte te hace una
+        pregunta final: un acertijo cuya respuesta define quién eres. El final que recibes es la
+        combinación de tu valor de dualidad acumulado y la respuesta que eliges en ese momento.
+        Quince combinaciones posibles. Quince versiones distintas de lo que le ocurre a Diego y al
+        legado de su abuelo.
       </p>
     </article>
 
     <article class="post">
       <div class="post-date">2026-05-30 &nbsp;·&nbsp; <span class="post-tag">#código</span></div>
-      <h2>Arquitectura: cero dependencias en runtime</h2>
+      <h2>Arquitectura: cómo construir un RPG narrativo en Python puro sin dependencias</h2>
       <p>
-        Por diseño (ADR-C-001), el motor del juego corre con Python puro — sin bibliotecas externas
-        en tiempo de ejecución. La narrativa vive en archivos <code>.md</code> compilados a
-        <code>story.json</code> en tiempo de build. El servidor web es FastAPI + uvicorn, pero la
-        lógica del juego es completamente independiente.
+        Una de las restricciones de diseño más importantes del proyecto fue la decisión de mantener
+        cero dependencias en tiempo de ejecución para el motor del juego. Esto significa que la lógica
+        de <em>El Legado de Diego</em> — combate, inventario, dualidad, resolución de finales — corre
+        en Python estándar, sin instalar nada externo.
+      </p>
+      <p>
+        La narrativa vive en archivos <code>.md</code> con una sintaxis propia: marcadores de escena
+        (<code>=== scene_id ===</code>), transiciones (<code>-&gt; scene_id</code>), efectos inline
+        y bloques condicionales basados en flags o en el valor de dualidad. Un script de build
+        (<code>tools/build.py</code>) compila estos archivos a un <code>story.json</code> optimizado
+        para lectura en runtime. El juego nunca toca los archivos Markdown directamente.
+      </p>
+      <p>
+        El estado del jugador (<code>PlayerState</code>) es un dataclass plano — sin objetos anidados.
+        Esta decisión (ADR-C-005) simplifica enormemente el guardado: serializar a JSON, comprimir con
+        gzip y agregar un checksum SHA-256 es suficiente para tener un sistema de guardado confiable.
+        En la versión web, este JSON vive en el <code>localStorage</code> del navegador; el servidor
+        nunca almacena partidas.
+      </p>
+      <p>
+        El servidor web es FastAPI + uvicorn, pero es una capa delgada: recibe comandos de texto,
+        los pasa al motor, devuelve la respuesta. El 95% de la lógica del juego no sabe que hay
+        un servidor. Esto permite que el mismo motor corra como CLI en la terminal o como backend
+        de una app web sin modificar una sola línea de la lógica central.
+      </p>
+    </article>
+
+    <article class="post">
+      <div class="post-date">2026-05-10 &nbsp;·&nbsp; <span class="post-tag">#mitología</span></div>
+      <h2>Los nueve niveles del Mictlán: la geografía del inframundo azteca</h2>
+      <p>
+        En la cosmología náhuatl, el Mictlán no es un lugar de castigo. Es el destino natural de
+        quienes mueren de muerte ordinaria — no en guerra, no en sacrificio, no por agua. Es un
+        viaje de cuatro años a través de nueve niveles llenos de pruebas, antes de llegar al reposo
+        definitivo junto a Mictlantecuhtli y Mictecacíhuatl, señores del inframundo.
+      </p>
+      <p>
+        <strong>Nivel I — Chiconahuapan:</strong> el río de las nueve corrientes. El primer obstáculo
+        es cruzar un río ancho y turbulento. Los muertos necesitaban la ayuda de un perro —
+        específicamente un xoloitzcuintle— que los guiara a través. Por eso los aztecas enterraban
+        a sus muertos con un perro de cerámica o con un perro real sacrificado.
+      </p>
+      <p>
+        <strong>Nivel II — Tepectli Monamictlan:</strong> la zona donde los cerros chocan entre sí.
+        Montañas que se abren y cierran, aplastando todo lo que pasa entre ellas. Solo la velocidad
+        y la astucia permiten atravesarlas.
+      </p>
+      <p>
+        <strong>Nivel III — Iztepetl:</strong> el cerro de obsidiana. Una planicie cubierta de
+        navajas de obsidiana que cortan los pies en cada paso. Los muertos debían atravesarla
+        sin protección, con solo la voluntad de continuar.
+      </p>
+      <p>
+        <strong>Nivel IV — Itzehecayan:</strong> el lugar del viento de obsidiana. Un viento helado
+        que corta como cuchillos. Es el nivel más temido de los primeros cuatro: el frío es tan
+        intenso que puede detener el alma en seco.
+      </p>
+      <p>
+        <strong>Nivel V — Pancuecuetlacayan:</strong> donde el viento levanta como bandera. Una
+        planicie de vientos tan fuertes que pueden arrastrar a los muertos y hacerlos retroceder
+        en su viaje.
+      </p>
+      <p>
+        <strong>Nivel VI — Temiminaloyan:</strong> donde flechan a los muertos. Arqueros invisibles
+        disparan flechas a quienes pasan. El muerto debe avanzar sin saber de dónde vendrá el
+        próximo disparo.
+      </p>
+      <p>
+        <strong>Nivel VII — Teyollocualoyan:</strong> donde come corazones una bestia. Una criatura
+        habita este nivel con un solo propósito: devorar el corazón de los viajeros. Superar este
+        nivel requiere demostrar que ya no tienes miedo de perder lo que eres.
+      </p>
+      <p>
+        <strong>Nivel VIII — Apochcaloca:</strong> el lugar sin humo y sin ventana. La oscuridad
+        total. No hay luz, no hay guía, no hay orientación. Solo el instinto y la memoria del
+        viaje recorrido.
+      </p>
+      <p>
+        <strong>Nivel IX — Chicnauhmictlan:</strong> el lugar de los nueve muertos. El trono de
+        Mictlantecuhtli. Aquí termina el viaje y comienza el juicio. En <em>El Legado de Diego</em>,
+        este es el momento donde todo lo que decidiste a lo largo del camino cobra su peso definitivo.
+      </p>
+    </article>
+
+    <article class="post">
+      <div class="post-date">2026-04-20 &nbsp;·&nbsp; <span class="post-tag">#guía</span></div>
+      <h2>Cómo jugar: guía para nuevos guardianes del Mictlán</h2>
+      <p>
+        <em>El Legado de Diego</em> es un RPG de texto puro. No hay gráficos, no hay clicks en
+        objetos, no hay inventario visual. Toda la interacción ocurre a través de comandos escritos
+        en la barra inferior de la pantalla. Si nunca has jugado un juego de texto, esta guía
+        te ayudará a empezar.
+      </p>
+      <p>
+        <strong>Comandos básicos de movimiento:</strong> escribe <code>norte</code>, <code>sur</code>,
+        <code>este</code> u <code>oeste</code> (o sus abreviaciones <code>n</code>, <code>s</code>,
+        <code>e</code>, <code>o</code>) para moverte entre habitaciones. Cada sala tiene una
+        descripción que te dice qué hay en ella y qué salidas están disponibles.
+      </p>
+      <p>
+        <strong>Interacción con el entorno:</strong> usa <code>mirar</code> para releer la
+        descripción de la sala actual. <code>examinar [objeto]</code> te da más detalles sobre
+        algo específico. <code>inventario</code> muestra lo que llevas contigo. <code>tomar [objeto]</code>
+        recoge un objeto del suelo.
+      </p>
+      <p>
+        <strong>Combate:</strong> cuando encuentres a un guardián hostil, el juego entra en modo
+        de combate por turnos. Los comandos disponibles son <code>atacar</code>, <code>defender</code>,
+        <code>huir</code> y <code>usar [objeto]</code>. Cada guardián tiene puntos de vida (HP) y
+        estadísticas propias. Tu medidor de ESP (espíritu) y NAH (nahual) afectan tus habilidades
+        de combate.
+      </p>
+      <p>
+        <strong>Guardar la partida:</strong> escribe <code>guardar</code> para abrir el menú de
+        guardado. Tienes hasta 5 slots disponibles. El juego guarda en tu navegador — no necesitas
+        cuenta. Para cargar una partida guardada, escribe <code>cargar</code>.
+      </p>
+      <p>
+        <strong>El medidor de dualidad:</strong> visible en la parte superior de la interfaz,
+        siempre entre 0 y 20. No hay una estrategia "correcta" — lo importante es ser coherente
+        con las decisiones que tomas. El Mictlán juzga la consistencia de tu carácter, no si eres
+        bueno o malo.
+      </p>
+      <p>
+        <strong>Consejo final:</strong> lee con atención las descripciones. El juego esconde pistas
+        sobre las pruebas que vienen. Los NPCs con los que hablas recuerdan cómo los trataste.
+        Y si un camino parece cerrado, intenta otra dirección — el Mictlán tiene más rutas de las
+        que aparenta.
       </p>
     </article>
 
