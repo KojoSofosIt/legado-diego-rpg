@@ -148,6 +148,11 @@ def blog():
     return (ROOT / "static" / "blog.html").read_text(encoding="utf-8")
 
 
+@app.get("/privacy", response_class=HTMLResponse)
+def privacy():
+    return (ROOT / "static" / "privacy.html").read_text(encoding="utf-8")
+
+
 @app.post("/api/feedback")
 def submit_feedback(req: FeedbackReq):
     name = req.name.strip()[:80]

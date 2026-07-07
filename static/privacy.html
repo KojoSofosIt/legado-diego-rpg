@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Kevin Jiménez Olea">
+<meta name="description" content="Política de Privacidad de El Legado de Diego: Guardianes del Mictlán.">
+<title>Política de Privacidad — El Legado de Diego</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:     #0d1117;
+    --bg2:    #161b22;
+    --border: #30363d;
+    --text:   #c9d1d9;
+    --dim:    #8b949e;
+    --yellow: #e3b341;
+    --cyan:   #79c0ff;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+  nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  nav .brand { color: var(--yellow); font-weight: bold; font-size: 15px; text-decoration: none; }
+  nav .nav-links { display: flex; gap: 12px; margin-left: auto; }
+  nav a {
+    color: var(--dim); text-decoration: none; font-size: 13px;
+    padding: 3px 8px; border: 1px solid transparent; border-radius: 4px;
+    transition: color .15s, border-color .15s;
+  }
+  nav a:hover { color: var(--cyan); border-color: var(--cyan); }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  h1 {
+    color: var(--yellow);
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .updated {
+    color: var(--dim);
+    font-size: 12px;
+    margin-bottom: 32px;
+  }
+  h2 {
+    color: var(--cyan);
+    font-size: 15px;
+    margin: 28px 0 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  p {
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  ul {
+    margin: 8px 0 12px 20px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  footer {
+    text-align: center;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--dim);
+    font-size: 11px;
+    margin-top: 40px;
+  }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">⚔ El Legado de Diego</a>
+  <div class="nav-links">
+    <a href="/">Jugar</a>
+    <a href="/blog">Blog</a>
+    <a href="mailto:kojo.sofos.it@gmail.com">Contacto</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <h1>Política de Privacidad</h1>
+  <div class="updated">Última actualización: 1 de julio de 2026</div>
+
+  <p>
+    Esta Política de Privacidad describe cómo <strong>El Legado de Diego: Guardianes del Mictlán</strong>
+    (operado por Kevin Jiménez Olea, en adelante "el Sitio") recopila, usa y protege la información
+    de los usuarios que visitan <strong>guardianes-del-mictlan.onrender.com</strong>.
+  </p>
+
+  <h2>1. Información que recopilamos</h2>
+  <p>El Sitio puede recopilar la siguiente información:</p>
+  <ul>
+    <li><strong>Formulario de feedback:</strong> nombre (opcional), correo electrónico (opcional), calificación (1–5 estrellas) y mensaje de texto libre. Esta información se envía y almacena en Amazon DynamoDB (AWS, región us-east-1).</li>
+    <li><strong>Sesión de juego:</strong> un identificador de sesión temporal se almacena en la memoria del servidor y expira a las 2 horas. El progreso del juego se guarda únicamente en el almacenamiento local de tu navegador (<em>localStorage</em>) y nunca se transmite a nuestros servidores.</li>
+    <li><strong>Datos de navegación:</strong> a través de Google AdSense, se pueden recopilar automáticamente datos como dirección IP, tipo de navegador, sistema operativo, páginas visitadas y duración de la visita, con fines publicitarios.</li>
+  </ul>
+
+  <h2>2. Uso de la información</h2>
+  <p>La información recopilada se usa exclusivamente para:</p>
+  <ul>
+    <li>Responder a comentarios y sugerencias enviados a través del formulario de feedback.</li>
+    <li>Mejorar el contenido y la experiencia del juego.</li>
+    <li>Mostrar publicidad relevante a través de Google AdSense (solo en las páginas del blog).</li>
+  </ul>
+
+  <h2>3. Google AdSense y cookies</h2>
+  <p>
+    El Sitio utiliza Google AdSense para mostrar anuncios en la página del blog.
+    Google AdSense usa cookies para mostrar anuncios basados en tus visitas anteriores a este sitio
+    y a otros sitios en Internet. Google puede usar estas cookies para personalizar los anuncios que ves.
+  </p>
+  <p>
+    Puedes desactivar la personalización de anuncios visitando
+    <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">
+      google.com/settings/ads
+    </a>.
+    Para más información sobre cómo Google usa los datos, consulta la
+    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">
+      Política de Privacidad de Google
+    </a>.
+  </p>
+  <p>
+    Los anuncios de Google AdSense <strong>no se muestran en la página del juego</strong>,
+    solo en el blog del sitio.
+  </p>
+
+  <h2>4. Almacenamiento local (localStorage)</h2>
+  <p>
+    El juego almacena el progreso de tu partida (hasta 5 slots de guardado) en el
+    <em>localStorage</em> de tu navegador. Esta información nunca se transmite a nuestros servidores
+    y permanece exclusivamente en tu dispositivo. Puedes borrarla en cualquier momento desde
+    la configuración de tu navegador.
+  </p>
+
+  <h2>5. Compartir información con terceros</h2>
+  <p>
+    No vendemos, comerciamos ni transferimos tu información personal a terceros, excepto:
+  </p>
+  <ul>
+    <li><strong>Amazon Web Services (AWS):</strong> los datos del formulario de feedback se almacenan en DynamoDB. AWS cumple con las normativas internacionales de protección de datos.</li>
+    <li><strong>Google AdSense:</strong> como se describe en la sección 3.</li>
+    <li><strong>Render.com:</strong> el servidor del juego está alojado en Render. Render puede registrar datos básicos de acceso (logs del servidor).</li>
+  </ul>
+
+  <h2>6. Seguridad</h2>
+  <p>
+    Tomamos medidas razonables para proteger la información enviada a través del formulario de feedback.
+    Sin embargo, ninguna transmisión de datos por Internet es 100% segura. Te recomendamos no enviar
+    información sensible a través del formulario.
+  </p>
+
+  <h2>7. Menores de edad</h2>
+  <p>
+    El Sitio no está dirigido a menores de 13 años y no recopilamos intencionalmente información
+    personal de menores. Si eres padre o tutor y crees que tu hijo ha enviado información personal,
+    contáctanos para eliminarla.
+  </p>
+
+  <h2>8. Tus derechos</h2>
+  <p>Puedes en cualquier momento:</p>
+  <ul>
+    <li>Solicitar la eliminación de los datos que enviaste a través del formulario de feedback.</li>
+    <li>Borrar tu progreso de juego desde la configuración de tu navegador (localStorage).</li>
+    <li>Desactivar las cookies de AdSense desde la configuración de tu navegador o en <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">google.com/settings/ads</a>.</li>
+  </ul>
+
+  <h2>9. Cambios a esta política</h2>
+  <p>
+    Podemos actualizar esta Política de Privacidad ocasionalmente. La fecha de la última
+    actualización aparece al inicio de este documento. El uso continuado del Sitio tras
+    cualquier cambio constituye tu aceptación de la nueva política.
+  </p>
+
+  <h2>10. Contacto</h2>
+  <p>
+    Para preguntas sobre esta Política de Privacidad o para solicitar la eliminación de tus datos,
+    contáctanos en:
+    <a href="mailto:kojo.sofos.it@gmail.com">kojo.sofos.it@gmail.com</a>
+  </p>
+
+</div>
+
+<footer>
+  © 2026 Kevin Jiménez Olea &nbsp;·&nbsp;
+  El Legado de Diego: Guardianes del Mictlán &nbsp;·&nbsp;
+  <a href="/">Jugar</a> &nbsp;·&nbsp;
+  <a href="/blog">Blog</a> &nbsp;·&nbsp;
+  <a href="mailto:kojo.sofos.it@gmail.com">kojo.sofos.it@gmail.com</a>
+</footer>
+
+</body>
+</html>
