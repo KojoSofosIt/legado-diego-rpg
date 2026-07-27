@@ -62,7 +62,17 @@
   }
   #toolbar button:hover { border-color: var(--cyan); color: var(--cyan); }
   #toolbar button.danger:hover { border-color: var(--red); color: var(--red); }
+  #toolbar a.tb-link {
+    padding: 3px 10px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 4px;
+    font-family: inherit; font-size: 12px; text-decoration: none;
+  }
+  #toolbar a.tb-link:hover { border-color: var(--cyan); color: var(--cyan); }
   #toolbar .sep { color: var(--border); }
+
+  #noscript-content { max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.7; }
+  #noscript-content h1 { color: var(--yellow); margin-bottom: 12px; }
+  #noscript-content a { color: var(--cyan); }
 
   /* ── Main area: terminal ── */
   #main-area { display: flex; flex: 1; overflow: hidden; }
@@ -147,6 +157,26 @@
 </style>
 </head>
 <body>
+<noscript>
+  <div id="noscript-content">
+    <h1>El Legado de Diego: Guardianes del Mictlán</h1>
+    <p>
+      RPG de texto gratuito ambientado en la mitología azteca. Tu abuelo Diego Montoya
+      desapareció buscando la entrada al Mictlán, el inframundo de los antiguos mexicas.
+      Ahora, frente a la misma puerta que él cruzó, desciendes por los nueve niveles del
+      inframundo para encontrarlo — o para descubrir qué se lo llevó.
+    </p>
+    <p>
+      Nueve niveles, 15 finales narrativos y más de 50 puntos de decisión con consecuencias,
+      gobernados por un medidor de dualidad que determina cómo termina tu historia.
+      Este juego requiere JavaScript para ejecutarse en el navegador.
+    </p>
+    <p>
+      Lee más en <a href="/about">la página Acerca del juego</a>, sigue el desarrollo en
+      <a href="/blog">el blog</a>, o activa JavaScript para jugar gratis ahora mismo.
+    </p>
+  </div>
+</noscript>
 <div id="layout">
 
   <!-- Toolbar -->
@@ -163,9 +193,9 @@
     <span class="sep">|</span>
     <button class="danger" onclick="confirmNewGame()">🔄 Nueva partida</button>
     <span class="sep">|</span>
-    <button onclick="window.open('/blog','_blank')">📰 Blog</button>
-    <button onclick="window.open('/about','_blank')">ℹ Acerca</button>
-    <button onclick="window.open('https://discord.gg/SenpBmH6A','_blank')">💬 Discord</button>
+    <a class="tb-link" href="/blog">📰 Blog</a>
+    <a class="tb-link" href="/about">ℹ Acerca</a>
+    <a class="tb-link" href="https://discord.gg/SenpBmH6A" target="_blank" rel="noopener">💬 Discord</a>
   </div>
 
   <!-- Main area -->

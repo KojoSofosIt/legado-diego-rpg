@@ -22,9 +22,12 @@ ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+
+SITE_URL = "https://guardianes-del-mictlan.onrender.com"
+ADSENSE_PUBLISHER_ID = "pub-6443804508474540"
 
 from src.player import Player
 from src.world import World
@@ -156,6 +159,35 @@ def privacy():
 @app.get("/about", response_class=HTMLResponse)
 def about():
     return (ROOT / "static" / "about.html").read_text(encoding="utf-8")
+
+
+@app.get("/ads.txt", response_class=PlainTextResponse)
+def ads_txt():
+    return f"google.com, {ADSENSE_PUBLISHER_ID}, DIRECT, f08c47fec0942fa0\n"
+
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+def robots_txt():
+    return (
+        "User-agent: *\n"
+        "Allow: /\n\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n"
+    )
+
+
+@app.get("/sitemap.xml", response_class=PlainTextResponse)
+def sitemap_xml():
+    pages = ["/", "/about", "/blog", "/privacy"]
+    urls = "\n".join(
+        f"  <url><loc>{SITE_URL}{p}</loc></url>" for p in pages
+    )
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{urls}\n"
+        "</urlset>\n"
+    )
+    return PlainTextResponse(content=xml, media_type="application/xml")
 
 
 @app.post("/api/feedback")
